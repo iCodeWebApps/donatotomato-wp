@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "donatotomato/widget",
+    "version": "1.0.0",
+    "title": "DonatoTomato Widget",
+    "category": "embed",
+    "icon": "heart",
+    "description": "Embed a DonatoTomato donation widget on your page.",
+    "keywords": ["donation", "fundraising", "nonprofit", "stripe"],
+    "attributes": {
+        "campaignId": {
+            "type": "string",
+            "default": ""
+        },
+        "orgSlug": {
+            "type": "string",
+            "default": ""
+        },
+        "width": {
+            "type": "integer",
+            "default": 480
+        },
+        "height": {
+            "type": "integer",
+            "default": 600
+        }
+    },
+    "supports": {
+        "html": false
+    },
+    "editorScript": "file:./build/index.js",
+    "editorStyle": "file:./build/index.css",
+    "style": "file:./assets/css/donatotomato.css"
+}
