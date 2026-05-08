@@ -1,8 +1,8 @@
 === DonatoTomato ===
-Contributors: donatotomato
+Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.8
 Stable tag: 1.0.0
 Requires PHP: 7.4
 License: GPL-2.0-or-later
@@ -67,6 +67,35 @@ DonatoTomato charges a 1% platform fee on donations processed. There is no month
 = Is this plugin compatible with page builders? =
 
 The shortcode works with any page builder that supports WordPress shortcodes (Elementor, Divi, WPBakery, etc.).
+
+== Third-Party Services ==
+
+This plugin connects to external services operated by DonatoTomato (Dev1 Consulting LLC) and Stripe. By using this plugin you agree to their respective terms and privacy policies.
+
+**DonatoTomato Platform (app.donatotomato.com)**
+
+When a visitor loads a page containing a DonatoTomato widget, their browser loads an iframe from `app.donatotomato.com`. Donation form submissions — including donor name, email, and payment details — are transmitted to and processed by DonatoTomato and Stripe. No payment or donor data is stored on your WordPress site.
+
+When a site administrator uses the Gutenberg block, the plugin calls `api.donatotomato.com` to fetch the list of your published campaigns (using your Organization Slug). No personal data is sent in this request.
+
+* Service: https://donatotomato.com
+* Terms of Service: https://donatotomato.com/terms
+* Privacy Policy: https://donatotomato.com/privacy
+
+**Stripe**
+
+Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's privacy policy applies to all donation transactions.
+
+* Service: https://stripe.com
+* Terms of Service: https://stripe.com/legal
+* Privacy Policy: https://stripe.com/privacy
+
+== Source Code ==
+
+This plugin includes a compiled Gutenberg block. The unminified source is available at:
+https://github.com/iCodeWebApps/donatotomato-wp
+
+Build instructions are in the repository README.
 
 == Screenshots ==
 

@@ -27,3 +27,7 @@ require_once DONATOTOMATO_PLUGIN_DIR . 'includes/class-block.php';
 new DonatoTomato_Admin();
 new DonatoTomato_Shortcode();
 new DonatoTomato_Block();
+
+add_action( 'plugins_loaded', function () {
+    load_plugin_textdomain( 'donatotomato', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+} );

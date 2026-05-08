@@ -22,7 +22,7 @@ class DonatoTomato_Block {
     }
 
     public function render( $attributes ) {
-        $slug     = ! empty( $attributes['orgSlug'] ) ? $attributes['orgSlug'] : get_option( 'donatotomato_org_slug', '' );
+        $slug     = ! empty( $attributes['orgSlug'] ) ? sanitize_text_field( $attributes['orgSlug'] ) : get_option( 'donatotomato_org_slug', '' );
         $campaign = isset( $attributes['campaignId'] ) ? sanitize_text_field( $attributes['campaignId'] ) : '';
         $width    = isset( $attributes['width'] ) ? absint( $attributes['width'] ) : 480;
         $height   = isset( $attributes['height'] ) ? absint( $attributes['height'] ) : 600;

@@ -13,8 +13,8 @@ class DonatoTomato_Admin {
 
     public function add_settings_page() {
         add_options_page(
-            'DonatoTomato Settings',
-            'DonatoTomato',
+            __( 'DonatoTomato Settings', 'donatotomato' ),
+            __( 'DonatoTomato', 'donatotomato' ),
             'manage_options',
             'donatotomato',
             [ $this, 'render_settings_page' ]
@@ -38,7 +38,7 @@ class DonatoTomato_Admin {
 
         add_settings_field(
             'donatotomato_org_slug',
-            'Organization Slug',
+            __( 'Organization Slug', 'donatotomato' ),
             [ $this, 'render_slug_field' ],
             'donatotomato',
             'donatotomato_main'
@@ -56,8 +56,13 @@ class DonatoTomato_Admin {
             placeholder="your-org-slug"
         />
         <p class="description">
-            Found in your <a href="https://app.donatotomato.com" target="_blank">DonatoTomato dashboard</a>
-            under Settings → Embed Code. Used as the default slug for all widgets on this site.
+            <?php
+            printf(
+                /* translators: %s: link to DonatoTomato dashboard */
+                esc_html__( 'Found in your %s under Settings → Embed Code. Used as the default slug for all widgets on this site.', 'donatotomato' ),
+                '<a href="' . esc_url( 'https://app.donatotomato.com' ) . '" target="_blank">' . esc_html__( 'DonatoTomato dashboard', 'donatotomato' ) . '</a>'
+            );
+            ?>
         </p>
         <?php
     }
@@ -68,19 +73,19 @@ class DonatoTomato_Admin {
         }
         ?>
         <div class="wrap">
-            <h1>DonatoTomato</h1>
+            <h1><?php esc_html_e( 'DonatoTomato', 'donatotomato' ); ?></h1>
             <form method="post" action="options.php">
                 <?php
                 settings_fields( 'donatotomato_settings' );
                 do_settings_sections( 'donatotomato' );
-                submit_button( 'Save Settings' );
+                submit_button( __( 'Save Settings', 'donatotomato' ) );
                 ?>
             </form>
             <hr />
-            <h2>Usage</h2>
-            <p><strong>Shortcode:</strong></p>
+            <h2><?php esc_html_e( 'Usage', 'donatotomato' ); ?></h2>
+            <p><strong><?php esc_html_e( 'Shortcode:', 'donatotomato' ); ?></strong></p>
             <code>[donatotomato campaign="your-campaign-id"]</code>
-            <p>Override the org slug for a specific widget:</p>
+            <p><?php esc_html_e( 'Override the org slug for a specific widget:', 'donatotomato' ); ?></p>
             <code>[donatotomato slug="other-org" campaign="your-campaign-id" width="480" height="600"]</code>
         </div>
         <?php

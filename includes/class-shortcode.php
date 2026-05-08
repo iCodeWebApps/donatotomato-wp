@@ -41,11 +41,15 @@ class DonatoTomato_Shortcode {
         $height   = absint( $atts['height'] ) ?: 600;
 
         if ( empty( $slug ) ) {
-            return '<p style="color:#b91c1c;">DonatoTomato: Organization slug not set. Visit <a href="' . esc_url( admin_url( 'options-general.php?page=donatotomato' ) ) . '">Settings → DonatoTomato</a>.</p>';
+            return '<p style="color:#b91c1c;">' . sprintf(
+                /* translators: %s: link to DonatoTomato settings page */
+                esc_html__( 'DonatoTomato: Organization slug not set. Visit %s.', 'donatotomato' ),
+                '<a href="' . esc_url( admin_url( 'options-general.php?page=donatotomato' ) ) . '">' . esc_html__( 'Settings → DonatoTomato', 'donatotomato' ) . '</a>'
+            ) . '</p>';
         }
 
         if ( empty( $campaign ) ) {
-            return '<p style="color:#b91c1c;">DonatoTomato: <code>campaign</code> attribute is required.</p>';
+            return '<p style="color:#b91c1c;">' . esc_html__( 'DonatoTomato: campaign attribute is required.', 'donatotomato' ) . '</p>';
         }
 
         return donatotomato_render_iframe( $slug, $campaign, $width, $height );
