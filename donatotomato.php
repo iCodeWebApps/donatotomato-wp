@@ -5,7 +5,6 @@
  * Description: Embed a DonatoTomato donation widget on any page or post.
  * Version:     1.0.0
  * Author:      DonatoTomato
- * Author URI:  https://donatotomato.com
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: donatotomato
