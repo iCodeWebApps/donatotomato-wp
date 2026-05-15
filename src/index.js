@@ -1,4 +1,4 @@
-﻿import { registerBlockType } from '@wordpress/blocks';
+import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, TextControl, RangeControl, Placeholder } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
