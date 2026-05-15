@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.0
+Stable tag: 1.0.2
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -28,6 +28,23 @@ This plugin lets you add a DonatoTomato widget to any page or post using a short
 
 * A free [DonatoTomato account](https://donatotomato.com)
 * A connected Stripe account (set up inside DonatoTomato)
+
+== Source Code ==
+
+The full, unminified source code for this plugin — including the Gutenberg block source that is compiled into `build/index.js` — is publicly available on GitHub:
+
+**https://github.com/iCodeWebApps/donatotomato-wp**
+
+The repository contains the complete, human-readable source. The compiled production output committed in `build/` is generated entirely from `src/index.js` via the official `@wordpress/scripts` build tool.
+
+**Build instructions:**
+
+1. Clone the repository: `git clone https://github.com/iCodeWebApps/donatotomato-wp.git`
+2. Install dependencies: `npm install` (requires Node.js 18+)
+3. Build the block: `npm run build` (outputs to `build/`)
+4. Or run in watch mode: `npm run start`
+
+There are no third-party developer libraries vendored into this plugin. The only build dependency is `@wordpress/scripts`, which is the official WordPress build tooling.
 
 == Installation ==
 
@@ -76,8 +93,6 @@ This plugin connects to external services operated by DonatoTomato (Dev1 Consult
 
 When a visitor loads a page containing a DonatoTomato widget, their browser loads an iframe from `app.donatotomato.com`. Donation form submissions — including donor name, email, and payment details — are transmitted to and processed by DonatoTomato and Stripe. No payment or donor data is stored on your WordPress site.
 
-When a site administrator uses the Gutenberg block, the plugin calls `api.donatotomato.com` to fetch the list of your published campaigns (using your Organization Slug). No personal data is sent in this request.
-
 * Service: https://donatotomato.com
 * Terms of Service: https://donatotomato.com/terms
 * Privacy Policy: https://donatotomato.com/privacy
@@ -90,13 +105,6 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 * Terms of Service: https://stripe.com/legal
 * Privacy Policy: https://stripe.com/privacy
 
-== Source Code ==
-
-This plugin includes a compiled Gutenberg block. The unminified source is available at:
-https://github.com/iCodeWebApps/donatotomato-wp
-
-Build instructions are in the repository README.
-
 == Screenshots ==
 
 1. Settings page — enter your Organization Slug
@@ -104,6 +112,13 @@ Build instructions are in the repository README.
 3. Live donation widget on a published page
 
 == Changelog ==
+
+= 1.0.2 =
+* Documented public source repository and build steps in the readme
+* Fixed auto-resize listener event type so embedded widgets resize correctly
+
+= 1.0.1 =
+* Fixed missing compiled assets in distributed package
 
 = 1.0.0 =
 * Initial release

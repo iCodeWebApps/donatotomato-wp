@@ -1,13 +1,21 @@
-(function () {
-    var WIDGET_ORIGIN = 'https://app.donatotomato.com';
+﻿( function () {
+	'use strict';
 
-    window.addEventListener('message', function (e) {
-        if (e.origin !== WIDGET_ORIGIN) return;
-        if (!e.data || e.data.type !== 'dt-resize' || typeof e.data.height !== 'number') return;
-
-        var iframes = document.querySelectorAll('iframe[src*="app.donatotomato.com"]');
-        iframes.forEach(function (iframe) {
-            iframe.style.height = (e.data.height + 24) + 'px';
-        });
-    });
-})();
+	window.addEventListener( 'message', function ( event ) {
+		if ( ! event.data || event.data.type !== 'dt-resize' ) {
+			return;
+		}
+		var height = parseInt( event.data.height, 10 );
+		if ( ! height || isNaN( height ) ) {
+			return;
+		}
+		var wrappers = document.querySelectorAll( '.donatotomato-wrapper' );
+		for ( var i = 0; i < wrappers.length; i++ ) {
+			var iframe = wrappers[ i ].querySelector( 'iframe' );
+			if ( iframe && event.source === iframe.contentWindow ) {
+				iframe.style.height = ( height + 24 ) + 'px';
+				break;
+			}
+		}
+	} );
+}() );
