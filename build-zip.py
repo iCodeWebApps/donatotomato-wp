@@ -1,7 +1,16 @@
-import zipfile, pathlib
+#!/usr/bin/env python3
+"""Build a reproducible WordPress.org-compatible plugin zip.
 
-root = pathlib.Path(__file__).parent
-files = [
+Reads the version from donatotomato.php's `Version:` header. Output zip
+entries use forward-slash paths (see vault note feedback_powershell_zip_backslash
+for why PowerShell's Compress-Archive is unsafe).
+"""
+import pathlib
+import re
+import zipfile
+
+ROOT = pathlib.Path(__file__).resolve().parent
+FILES = [
     'donatotomato.php',
     'readme.txt',
     'uninstall.php',
@@ -15,20 +24,31 @@ files = [
     'build/index.js',
 ]
 
-out = root / 'donatotomato-1.0.2.zip'
-if out.exists():
-    out.unlink()
 
-with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
-    for f in files:
-        src = root / f
-        if not src.exists():
-            print(f'MISSING: {f}')
-            continue
-        arc = 'donatotomato/' + f
-        z.write(src, arc)
+def read_version() -> str:
+    text = (ROOT / 'donatotomato.php').read_text(encoding='utf-8')
+    match = re.search(r'^\s*\*\s*Version:\s*(\S+)\s*$', text, re.MULTILINE)
+    if not match:
+        raise SystemExit('donatotomato.php: no Version header found')
+    return match.group(1)
 
-print(f'Built {out} ({out.stat().st_size} bytes)')
-with zipfile.ZipFile(out) as z:
-    for n in z.namelist():
-        print(' ', n)
+
+def main() -> None:
+    version = read_version()
+    out = ROOT / f'donatotomato-{version}.zip'
+    if out.exists():
+        out.unlink()
+
+    missing = [f for f in FILES if not (ROOT / f).exists()]
+    if missing:
+        raise SystemExit('Missing files (run `npm run build` first?):\n  ' + '\n  '.join(missing))
+
+    with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
+        for f in FILES:
+            z.write(ROOT / f, 'donatotomato/' + f)
+
+    print(f'Built {out.name} ({out.stat().st_size} bytes)')
+
+
+if __name__ == '__main__':
+    main()
