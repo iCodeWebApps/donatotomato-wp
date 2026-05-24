@@ -8,6 +8,8 @@
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: donatotomato
+ *
+ * @package DonatoTomato
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,4 +28,3 @@ require_once DONATOTOMATO_PLUGIN_DIR . 'includes/class-block.php';
 new DonatoTomato_Admin();
 new DonatoTomato_Shortcode();
 new DonatoTomato_Block();
-
