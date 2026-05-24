@@ -1,6 +1,12 @@
 # DonatoTomato for WordPress
 
+[![CI](https://github.com/iCodeWebApps/donatotomato-wp/actions/workflows/ci.yml/badge.svg)](https://github.com/iCodeWebApps/donatotomato-wp/actions/workflows/ci.yml)
+[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/donatotomato.svg)](https://wordpress.org/plugins/donatotomato/)
+[![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/donatotomato.svg)](https://wordpress.org/plugins/donatotomato/)
+
 Embed a [DonatoTomato](https://donatotomato.com) donation widget on any WordPress page or post — via shortcode or Gutenberg block.
+
+Live in the WordPress Plugin Directory: **https://wordpress.org/plugins/donatotomato/**
 
 ## What is DonatoTomato?
 
@@ -8,7 +14,7 @@ DonatoTomato is a donation platform built for US nonprofits. Accept one-time and
 
 ## Installation
 
-1. Upload the plugin to `/wp-content/plugins/donatotomato/` or install via the WordPress plugin directory.
+1. Install **DonatoTomato** from the WordPress plugin directory (Plugins → Add New → search "DonatoTomato"), or upload the plugin to `/wp-content/plugins/donatotomato/`.
 2. Activate the plugin through the **Plugins** menu.
 3. Go to **Settings → DonatoTomato** and enter your Organization Slug (found in your [DonatoTomato dashboard](https://app.donatotomato.com) under Settings → Embed Code).
 
@@ -28,7 +34,7 @@ Override the org slug or dimensions for a specific widget:
 
 **Gutenberg Block**
 
-Search for **DonatoTomato Widget** in the block inserter. Select your campaign from the dropdown in the block settings panel.
+Search for **DonatoTomato Widget** in the block inserter. Enter your Organization Slug and Campaign ID in the block settings panel. The editor shows a configured-state placeholder; the live widget renders on the published page.
 
 ## Development
 
@@ -38,13 +44,48 @@ npm run build   # production build → build/
 npm run start   # watch mode
 ```
 
-Requires Node.js 18+. The `build/` directory is gitignored — run the build before deploying.
+Requires Node.js 18+. The `build/` directory is gitignored — run the build before packaging.
+
+PHP linting (PHPCS + WordPress Coding Standards) runs in CI via composer:
+
+```bash
+composer install
+composer lint        # check
+composer lint:fix    # auto-fix
+```
+
+## Releasing a new version
+
+1. Bump the version in all five canonical locations with one command:
+   ```bash
+   python bin/bump-version.py 1.2.0
+   ```
+2. Replace the auto-generated `TODO: describe changes` stub in `readme.txt`'s `== Changelog ==` with the real entry.
+3. Commit, push, and open a PR. The `CI` workflow runs PHPCS + Plugin Check against the extracted distribution zip.
+4. After merge to `main`, tag the release:
+   ```bash
+   git tag v1.2.0
+   git push origin v1.2.0
+   ```
+5. The `Release` workflow builds the zip and attaches it to a new [GitHub Release](https://github.com/iCodeWebApps/donatotomato-wp/releases).
+6. Push the release to WordPress.org SVN (manual until automated):
+   ```bash
+   cd /path/to/svn-checkout
+   cp -r /path/to/extracted-zip/donatotomato/* trunk/
+   svn cp trunk tags/1.2.0
+   svn ci -m "Release 1.2.0"
+   ```
 
 ## Requirements
 
 - WordPress 6.0+
 - PHP 7.4+
 - A free [DonatoTomato account](https://donatotomato.com)
+
+## Support
+
+- [WordPress.org support forum](https://wordpress.org/support/plugin/donatotomato/)
+- [GitHub Issues](https://github.com/iCodeWebApps/donatotomato-wp/issues)
 
 ## License
 
