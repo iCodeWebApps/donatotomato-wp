@@ -2,12 +2,17 @@
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
     "name": "donatotomato/widget",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "title": "DonatoTomato Widget",
     "category": "embed",
     "icon": "heart",
     "description": "Embed a DonatoTomato donation widget on your page.",
-    "keywords": ["donation", "fundraising", "nonprofit", "stripe"],
+    "keywords": [
+        "donation",
+        "fundraising",
+        "nonprofit",
+        "stripe"
+    ],
     "attributes": {
         "campaignId": {
             "type": "string",

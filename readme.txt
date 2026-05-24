@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -112,6 +112,11 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 3. Live donation widget on a published page
 
 == Changelog ==
+
+= 1.1.0 =
+* Editor: replaced live iframe preview with a configured-state placeholder so the block editor never loads an external origin
+* Build/release: parameterized `build-zip.py` to read the version from the plugin header; added `bin/bump-version.py` to update all version locations in one step
+* CI: added GitHub Actions workflows for PR validation (PHPCS + Plugin Check on extracted zip) and tag-triggered GitHub Release artifact
 
 = 1.0.2 =
 * Documented public source repository and build steps in the readme
