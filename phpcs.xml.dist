@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ruleset name="DonatoTomato">
+    <description>Coding standards for the DonatoTomato WordPress plugin.
+
+    Focused on semantic issues (i18n text-domain, escaping, sanitization,
+    function/class naming, PHP compat). Stylistic-only rules are excluded
+    deliberately: this plugin uses 4-space indentation and short array
+    syntax — both legal PHP, both consistent across the codebase, neither
+    flagged by wordpress.org's Plugin Check.
+    </description>
+
+    <file>donatotomato.php</file>
+    <file>uninstall.php</file>
+    <file>includes</file>
+
+    <exclude-pattern>*/build/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <config name="minimum_supported_wp_version" value="6.0"/>
+    <config name="testVersion" value="7.4-"/>
+
+    <rule ref="WordPress">
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+
+        <!-- Stylistic preferences, not semantic issues. -->
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+        <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+        <exclude name="Universal.Operators.DisallowShortTernary"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.Indent"/>
+        <exclude name="Universal.Files.SeparateFunctionsFromOO"/>
+
+        <!-- Docblocks are a documentation-hygiene preference; the plugin's PHP surface is small
+             and self-documenting. The reviewer-relevant docblocks (Plugin Name header) are present. -->
+        <exclude name="Squiz.Commenting.FileComment.Missing"/>
+        <exclude name="Squiz.Commenting.ClassComment.Missing"/>
+        <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+
+        <!-- Flags the literal "wordpress" in `?source=wordpress` URL query params; not a misspelling. -->
+        <exclude name="WordPress.WP.CapitalPDangit.MisspelledInText"/>
+    </rule>
+
+    <rule ref="PHPCompatibilityWP"/>
+
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="donatotomato"/>
+            </property>
+        </properties>
+    </rule>
+</ruleset>

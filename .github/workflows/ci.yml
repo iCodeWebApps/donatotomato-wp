@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build-and-lint:
+    name: Build, lint, Plugin Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install npm deps
+        run: npm ci
+
+      - name: Build block
+        run: npm run build
+
+      - name: Set up PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer:v2, cs2pr
+          coverage: none
+
+      - name: Install composer deps
+        run: composer install --no-progress --prefer-dist
+
+      - name: Run PHPCS (WordPress standard)
+        run: vendor/bin/phpcs -q --report=checkstyle | cs2pr
+
+      - name: Read version
+        id: version
+        run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Build distribution zip
+        run: python3 build-zip.py
+
+      - name: Extract zip to junction-free path
+        run: |
+          mkdir -p /tmp/plugin-check-extract
+          unzip -q "donatotomato-${{ steps.version.outputs.version }}.zip" -d /tmp/plugin-check-extract
+
+      - name: Run Plugin Check (WordPress.org review tool)
+        uses: wordpress/plugin-check-action@v1
+        with:
+          build-dir: /tmp/plugin-check-extract/donatotomato

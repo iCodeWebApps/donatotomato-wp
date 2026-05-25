@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and attach release artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install npm deps
+        run: npm ci
+
+      - name: Build block
+        run: npm run build
+
+      - name: Read version
+        id: version
+        run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+
+      - name: Verify tag matches plugin version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          plugin="${{ steps.version.outputs.version }}"
+          if [ "$tag" != "$plugin" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match plugin version $plugin" >&2
+            exit 1
+          fi
+
+      - name: Build distribution zip
+        run: python3 build-zip.py
+
+      - name: Extract changelog entry for this version
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          awk "/^= ${version} =/{flag=1; next} /^= [0-9]/{flag=0} flag" readme.txt > release-notes.md
+          cat release-notes.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "donatotomato-${{ steps.version.outputs.version }}.zip" \
+            --title "v${{ steps.version.outputs.version }}" \
+            --notes-file release-notes.md
