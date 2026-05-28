@@ -5,6 +5,8 @@
  * Mirrors DonatoTomato_Button_Shortcode in rendered output; the block.json
  * sits in block-button.json and shares the build/index.js editor script
  * with the existing widget block.
+ *
+ * @package DonatoTomato
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

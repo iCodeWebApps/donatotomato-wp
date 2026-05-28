@@ -5,6 +5,8 @@
  * tag. Both DonatoTomato_Button_Shortcode and DonatoTomato_Button_Block
  * call DonatoTomato_Embed_Loader::enqueue() inside their render paths so
  * embed.js only loads on pages that actually contain a Donate button.
+ *
+ * @package DonatoTomato
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -34,7 +36,10 @@ class DonatoTomato_Embed_Loader {
             self::HANDLE,
             DONATOTOMATO_APP_URL . '/embed.js',
             [],
-            null, // server-managed; never append ?ver=
+            // Version intentionally null — embed.js is server-managed at
+            // app.donatotomato.com; cache-busting is handled upstream and
+            // we never append a ?ver= query string here.
+            null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.NotSetVersion
             [
                 'strategy'  => 'async',
                 'in_footer' => true,
@@ -55,6 +60,10 @@ class DonatoTomato_Embed_Loader {
      * Inject data-dt-tenant onto the script tag so embed.js can pick up
      * the configured org slug at load time. Also force-add `async` for
      * WP < 6.3 (where the 'strategy' register_script arg is ignored).
+     *
+     * @param string $tag    The full <script> tag rendered by WP.
+     * @param string $handle The script handle the tag was rendered for.
+     * @return string Possibly-modified tag.
      */
     public static function add_tenant_attribute( $tag, $handle ) {
         if ( self::HANDLE !== $handle ) {

@@ -7,6 +7,8 @@
  *   [donatotomato_button campaign="abc-123" label="Give now"]
  *   [donatotomato_button campaign="abc-123" label="Donate" class="my-btn"]
  *   [donatotomato_button slug="other-org" campaign="abc-123"]
+ *
+ * @package DonatoTomato
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,7 +23,7 @@ class DonatoTomato_Button_Shortcode {
 
     public function render( $atts ) {
         $atts = shortcode_atts( [
-            'slug'     => '', // override the global org slug for this button
+            'slug'     => '', // Override the global org slug for this button.
             'campaign' => '',
             'label'    => __( 'Donate', 'donatotomato' ),
             'class'    => '',
