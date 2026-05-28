@@ -127,8 +127,9 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 1. Live donation widget embedded on a published page
 2. Donate button opens the donation form in a focal-modal pop-up (new in 1.2.0)
 3. Both DonatoTomato blocks available in the Gutenberg inserter
-4. Donate Button block in the editor with campaign ID and label settings (new in 1.2.0)
-5. Settings page — enter your Organization Slug
+4. DonatoTomato Widget block in the editor with campaign ID, width, and height settings
+5. Donate Button block in the editor with campaign ID and label settings (new in 1.2.0)
+6. Settings page — enter your Organization Slug
 
 == Changelog ==
 
