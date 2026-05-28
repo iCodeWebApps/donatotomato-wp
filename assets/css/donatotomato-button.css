@@ -1,0 +1,40 @@
+/* DonatoTomato — Donate Button trigger styles (frontend + editor).
+ * Minimal default appearance. Customers can override with a `class`
+ * attribute on the shortcode or a className on the block, or by
+ * targeting `.donatotomato-button` in their theme CSS.
+ */
+.donatotomato-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    padding: 0.75em 1.4em;
+    background-color: #10b981;
+    color: #ffffff;
+    border: 0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.2;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.donatotomato-button:hover,
+.donatotomato-button:focus {
+    background-color: #059669;
+    color: #ffffff;
+}
+
+.donatotomato-button:focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+}
+
+.donatotomato-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

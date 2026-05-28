@@ -83,10 +83,22 @@ class DonatoTomato_Admin {
             </form>
             <hr />
             <h2><?php esc_html_e( 'Usage', 'donatotomato' ); ?></h2>
+
+            <h3><?php esc_html_e( 'Inline widget', 'donatotomato' ); ?></h3>
+            <p><?php esc_html_e( 'Embeds the donation form directly on the page.', 'donatotomato' ); ?></p>
             <p><strong><?php esc_html_e( 'Shortcode:', 'donatotomato' ); ?></strong></p>
             <code>[donatotomato campaign="your-campaign-id"]</code>
             <p><?php esc_html_e( 'Override the org slug for a specific widget:', 'donatotomato' ); ?></p>
             <code>[donatotomato slug="other-org" campaign="your-campaign-id" width="480" height="600"]</code>
+            <p><strong><?php esc_html_e( 'Gutenberg block:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'Search for "DonatoTomato Widget" in the block inserter.', 'donatotomato' ); ?></p>
+
+            <h3><?php esc_html_e( 'Donate button (pop-up)', 'donatotomato' ); ?></h3>
+            <p><?php esc_html_e( 'Adds a button that opens the donation form in a focal-modal pop-up. Use it in your nav menu, hero CTA, or anywhere else.', 'donatotomato' ); ?></p>
+            <p><strong><?php esc_html_e( 'Shortcode:', 'donatotomato' ); ?></strong></p>
+            <code>[donatotomato_button campaign="your-campaign-id"]</code>
+            <p><?php esc_html_e( 'With a custom label and CSS class:', 'donatotomato' ); ?></p>
+            <code>[donatotomato_button campaign="your-campaign-id" label="Give now" class="my-custom-class"]</code>
+            <p><strong><?php esc_html_e( 'Gutenberg block:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'Search for "DonatoTomato Donate Button" in the block inserter.', 'donatotomato' ); ?></p>
         </div>
         <?php
     }

@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,11 +14,12 @@ Embed a DonatoTomato donation widget on any page or post. Accepts one-time and r
 
 [DonatoTomato](https://donatotomato.com) is a donation platform built for US nonprofits. Accept one-time and recurring donations through a beautiful, embeddable widget — with automatic tax receipts, donor management, and a 1% platform fee (no monthly cost).
 
-This plugin lets you add a DonatoTomato widget to any page or post using a shortcode or a Gutenberg block.
+This plugin lets you add a DonatoTomato widget to any page or post using a shortcode or a Gutenberg block, or drop a Donate button into your site's nav that opens the donation form as a pop-up.
 
 **Features:**
 
-* Add widgets via shortcode or Gutenberg block
+* **Inline widget** — embed the donation form directly on a page (shortcode or Gutenberg block)
+* **Donate button** — drop a button in your nav (or anywhere) that opens the donation form as a pop-up overlay (shortcode or Gutenberg block)
 * One-time and recurring (monthly) donations
 * Automatic tax receipt emails for donors
 * Branded with your nonprofit's logo and colors
@@ -55,6 +56,10 @@ There are no third-party developer libraries vendored into this plugin. The only
 
 == Usage ==
 
+There are two widget styles: an **inline embed** (donation form sits directly on a page) and a **Donate button** (button anywhere on your site opens the donation form in a pop-up overlay — perfect for site navigation).
+
+= Inline widget =
+
 **Shortcode:**
 
 `[donatotomato campaign="your-campaign-id"]`
@@ -63,9 +68,21 @@ With optional overrides:
 
 `[donatotomato slug="your-org" campaign="your-campaign-id" width="480" height="600"]`
 
-**Gutenberg Block:**
+**Gutenberg Block:** Search for "DonatoTomato Widget" in the block inserter (under Embeds). Enter your Campaign ID in the block settings panel.
 
-Search for "DonatoTomato Widget" in the block inserter (under Embeds). Enter your Campaign ID in the block settings panel.
+= Donate button (pop-up) =
+
+**Shortcode:**
+
+`[donatotomato_button campaign="your-campaign-id"]`
+
+With optional overrides:
+
+`[donatotomato_button campaign="your-campaign-id" label="Give now" class="my-custom-class"]`
+
+**Gutenberg Block:** Search for "DonatoTomato Donate Button" in the block inserter (under Embeds). Enter your Campaign ID and optional label.
+
+**Adding to your nav menu:** Most themes support adding a Custom Link or Custom HTML to the menu. Use the shortcode in a Custom HTML block, or paste the rendered HTML directly: `<button type="button" class="donatotomato-button" data-dt-donate="your-campaign-id">Donate</button>` (works only after the plugin is active so the supporting script is loaded).
 
 == Frequently Asked Questions ==
 
@@ -91,7 +108,7 @@ This plugin connects to external services operated by DonatoTomato (Dev1 Consult
 
 **DonatoTomato Platform (app.donatotomato.com)**
 
-When a visitor loads a page containing a DonatoTomato widget, their browser loads an iframe from `app.donatotomato.com`. Donation form submissions — including donor name, email, and payment details — are transmitted to and processed by DonatoTomato and Stripe. No payment or donor data is stored on your WordPress site.
+When a visitor loads a page containing a DonatoTomato widget, their browser loads an iframe from `app.donatotomato.com`. When a page contains a DonatoTomato Donate button, the browser additionally loads a small focal-modal script (`embed.js`, ~2KB gzip) from `app.donatotomato.com` that opens the donation iframe in a pop-up overlay when the button is clicked. Donation form submissions — including donor name, email, and payment details — are transmitted to and processed by DonatoTomato and Stripe. No payment or donor data is stored on your WordPress site.
 
 * Service: https://donatotomato.com
 * Terms of Service: https://donatotomato.com/terms
@@ -112,6 +129,11 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 3. Live donation widget on a published page
 
 == Changelog ==
+
+= 1.2.0 =
+* New: `[donatotomato_button]` shortcode and "DonatoTomato Donate Button" Gutenberg block — drop a Donate button anywhere on your site (nav menu, hero, footer) that opens the donation form in a focal-modal pop-up. Powered by `embed.js`, auto-loaded only on pages that include a Donate button.
+* New: per-button `label` and `class` attributes for theme integration.
+* Existing inline widget block and `[donatotomato]` shortcode are unchanged.
 
 = 1.1.0 =
 * Editor: replaced live iframe preview with a configured-state placeholder so the block editor never loads an external origin

@@ -1,17 +1,19 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "donatotomato/widget",
+    "name": "donatotomato/button",
     "version": "1.2.0",
-    "title": "DonatoTomato Widget",
+    "title": "DonatoTomato Donate Button",
     "category": "embed",
     "icon": "heart",
-    "description": "Embed a DonatoTomato donation widget on your page.",
+    "description": "A Donate button that opens the donation widget in a pop-up overlay.",
     "keywords": [
         "donation",
         "fundraising",
         "nonprofit",
-        "stripe"
+        "stripe",
+        "donate",
+        "button"
     ],
     "attributes": {
         "campaignId": {
@@ -22,18 +24,20 @@
             "type": "string",
             "default": ""
         },
-        "width": {
-            "type": "integer",
-            "default": 480
-        },
-        "height": {
-            "type": "integer",
-            "default": 600
+        "label": {
+            "type": "string",
+            "default": "Donate"
         }
     },
     "supports": {
-        "html": false
+        "html": false,
+        "className": true,
+        "align": [
+            "left",
+            "center",
+            "right"
+        ]
     },
     "editorScript": "file:./build/index.js",
-    "style": "file:./assets/css/donatotomato.css"
+    "style": "file:./assets/css/donatotomato-button.css"
 }
