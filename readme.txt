@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -124,11 +124,16 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 
 == Screenshots ==
 
-1. Settings page — enter your Organization Slug
-2. Gutenberg block in the editor
-3. Live donation widget on a published page
+1. Live donation widget embedded on a published page
+2. Donate button opens the donation form in a focal-modal pop-up (new in 1.2.0)
+3. Both DonatoTomato blocks available in the Gutenberg inserter
+4. Donate Button block in the editor with campaign ID and label settings (new in 1.2.0)
+5. Settings page — enter your Organization Slug
 
 == Changelog ==
+
+= 1.2.1 =
+* Fix: "DonatoTomato Donate Button" Gutenberg block now registers correctly. In 1.2.0 the block silently failed to register because WordPress's `register_block_type_from_metadata()` only recognises files literally named `block.json`. The block now registers via a manual handle-based path. The `[donatotomato_button]` shortcode was not affected.
 
 = 1.2.0 =
 * New: `[donatotomato_button]` shortcode and "DonatoTomato Donate Button" Gutenberg block — drop a Donate button anywhere on your site (nav menu, hero, footer) that opens the donation form in a focal-modal pop-up. Powered by `embed.js`, auto-loaded only on pages that include a Donate button.
