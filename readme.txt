@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -132,6 +132,9 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 6. Settings page — enter your Organization Slug
 
 == Changelog ==
+
+= 1.2.2 =
+* New: block editor now flags a malformed Campaign ID inline (UUID format check) and surfaces a "View live preview" link in the inspector when both the Organization Slug and Campaign ID are set. Catches typos and slug/campaign mismatches before publishing — previously the widget would silently render a "Campaign not found" error to donors on the live page.
 
 = 1.2.1 =
 * Fix: "DonatoTomato Donate Button" Gutenberg block now registers correctly. In 1.2.0 the block silently failed to register because WordPress's `register_block_type_from_metadata()` only recognises files literally named `block.json`. The block now registers via a manual handle-based path. The `[donatotomato_button]` shortcode was not affected.
