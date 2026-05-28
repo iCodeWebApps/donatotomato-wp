@@ -4,7 +4,7 @@
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/donatotomato.svg)](https://wordpress.org/plugins/donatotomato/)
 [![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/donatotomato.svg)](https://wordpress.org/plugins/donatotomato/)
 
-Embed a [DonatoTomato](https://donatotomato.com) donation widget on any WordPress page or post — via shortcode or Gutenberg block.
+Embed a [DonatoTomato](https://donatotomato.com) donation widget on any WordPress page or post — via shortcode or Gutenberg block — or drop a Donate button into your nav that opens the donation form as a pop-up.
 
 Live in the WordPress Plugin Directory: **https://wordpress.org/plugins/donatotomato/**
 
@@ -20,7 +20,9 @@ DonatoTomato is a donation platform built for US nonprofits. Accept one-time and
 
 ## Usage
 
-**Shortcode**
+The plugin ships two widget styles:
+
+### Inline widget (donation form embedded on a page)
 
 ```
 [donatotomato campaign="your-campaign-id"]
@@ -32,9 +34,20 @@ Override the org slug or dimensions for a specific widget:
 [donatotomato slug="your-org" campaign="your-campaign-id" width="480" height="600"]
 ```
 
-**Gutenberg Block**
+Gutenberg block: search for **DonatoTomato Widget** in the block inserter. Enter your Campaign ID in the settings panel; the editor shows a configured-state placeholder and the live widget renders on the published page.
 
-Search for **DonatoTomato Widget** in the block inserter. Enter your Organization Slug and Campaign ID in the block settings panel. The editor shows a configured-state placeholder; the live widget renders on the published page.
+### Donate button (pop-up modal trigger)
+
+Drops a button anywhere (nav menu, hero CTA, footer) that opens the donation form as a focal-modal pop-up — matches the pattern used by Givebutter, Fundraise Up, Donorbox, etc.
+
+```
+[donatotomato_button campaign="your-campaign-id"]
+[donatotomato_button campaign="your-campaign-id" label="Give now" class="my-custom-class"]
+```
+
+Gutenberg block: search for **DonatoTomato Donate Button** in the block inserter. Configure Campaign ID, button label, and optional per-button org-slug override in the settings panel.
+
+The button is powered by a small focal-modal script (`embed.js`, ~2KB gzip) auto-loaded only on pages that contain a Donate button.
 
 ## Development
 

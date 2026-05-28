@@ -51,9 +51,10 @@ def main() -> None:
     root = pathlib.Path(__file__).resolve().parent.parent
     bump_php(root / 'donatotomato.php', version)
     bump_json(root / 'block.json', version)
+    bump_json(root / 'block-button.json', version)
     bump_json(root / 'package.json', version)
     bump_readme(root / 'readme.txt', version)
-    print(f'Bumped to {version} in donatotomato.php, block.json, package.json, readme.txt')
+    print(f'Bumped to {version} in donatotomato.php, block.json, block-button.json, package.json, readme.txt')
 
 
 if __name__ == '__main__':

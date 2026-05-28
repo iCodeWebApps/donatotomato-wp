@@ -2,9 +2,11 @@ import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, TextControl, RangeControl, Placeholder } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import metadata from '../block.json';
+import widgetMetadata from '../block.json';
+import buttonMetadata from '../block-button.json';
 
-registerBlockType( metadata.name, {
+// ─── Widget block: inline iframe embed (existing) ─────────────────────────────
+registerBlockType( widgetMetadata.name, {
 	edit( { attributes, setAttributes } ) {
 		const blockProps = useBlockProps();
 		const { campaignId, orgSlug, width, height } = attributes;
@@ -80,6 +82,66 @@ registerBlockType( metadata.name, {
 							</div>
 						) }
 					</Placeholder>
+				</div>
+			</>
+		);
+	},
+	save() {
+		return null;
+	},
+} );
+
+// ─── Button block: pop-up modal trigger (new in 1.2.0) ────────────────────────
+registerBlockType( buttonMetadata.name, {
+	edit( { attributes, setAttributes } ) {
+		const blockProps = useBlockProps();
+		const { campaignId, orgSlug, label } = attributes;
+		const configured = !! campaignId;
+		const displayLabel = label || __( 'Donate', 'donatotomato' );
+
+		return (
+			<>
+				<InspectorControls>
+					<PanelBody title={ __( 'DonatoTomato Button Settings', 'donatotomato' ) }>
+						<TextControl
+							label={ __( 'Campaign ID', 'donatotomato' ) }
+							value={ campaignId }
+							onChange={ ( v ) => setAttributes( { campaignId: v } ) }
+							help={ __( 'Found on the Campaign Detail page in your DonatoTomato dashboard.', 'donatotomato' ) }
+						/>
+						<TextControl
+							label={ __( 'Button Label', 'donatotomato' ) }
+							value={ label }
+							onChange={ ( v ) => setAttributes( { label: v } ) }
+							help={ __( 'Text shown on the button. Defaults to "Donate".', 'donatotomato' ) }
+						/>
+						<TextControl
+							label={ __( 'Organization Slug (override)', 'donatotomato' ) }
+							value={ orgSlug }
+							onChange={ ( v ) => setAttributes( { orgSlug: v } ) }
+							help={ __( 'Leave blank to use the slug from Settings → DonatoTomato. Set only if this button should open a different org\'s campaign.', 'donatotomato' ) }
+						/>
+					</PanelBody>
+				</InspectorControls>
+				<div { ...blockProps }>
+					{ configured ? (
+						<button
+							type="button"
+							className="donatotomato-button"
+							onClick={ ( e ) => e.preventDefault() }
+						>
+							{ displayLabel }
+						</button>
+					) : (
+						<Placeholder
+							icon="heart"
+							label={ __( 'DonatoTomato Donate Button', 'donatotomato' ) }
+							instructions={ __(
+								'Enter a Campaign ID in the block settings panel on the right. The button opens a donation pop-up when clicked on the published page.',
+								'donatotomato'
+							) }
+						/>
+					) }
 				</div>
 			</>
 		);
