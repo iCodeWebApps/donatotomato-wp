@@ -32,19 +32,22 @@ class DonatoTomato_Embed_Loader {
         // — add_tenant_attribute() below also injects `async` via the tag
         // filter (idempotent if 6.3+ already rendered it), so async load
         // works on all supported WP versions.
+        //
+        // Version is intentionally null — embed.js is server-managed at
+        // app.donatotomato.com; cache-busting is handled upstream and we
+        // never append a ?ver= query string here.
+        // phpcs:disable WordPress.WP.EnqueuedResourceParameters.NotSetVersion
         wp_register_script(
             self::HANDLE,
             DONATOTOMATO_APP_URL . '/embed.js',
             [],
-            // Version intentionally null — embed.js is server-managed at
-            // app.donatotomato.com; cache-busting is handled upstream and
-            // we never append a ?ver= query string here.
-            null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.NotSetVersion
+            null,
             [
                 'strategy'  => 'async',
                 'in_footer' => true,
             ]
         );
+        // phpcs:enable WordPress.WP.EnqueuedResourceParameters.NotSetVersion
     }
 
     /**
