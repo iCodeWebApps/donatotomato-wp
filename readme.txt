@@ -3,23 +3,33 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.0
+Stable tag: 1.2.2
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Embed a DonatoTomato donation widget on any page or post. Accepts one-time and recurring donations via Stripe.
+Add a floating Donate button to every page of your nonprofit site in 60 seconds. No theme edits, no HTML, no developer.
 
 == Description ==
 
+Add a Donate button to every page of your nonprofit site in 60 seconds. No theme edits, no HTML, no developer.
+
+DonatoTomato's WordPress plugin gives you a one-time admin setup — pick a campaign, pick a position, save — and a styled floating Donate button appears site-wide. Clicking it opens your donation form in a focal-modal pop-up. The button is responsive, theme-compatible, and accessible by default.
+
 [DonatoTomato](https://donatotomato.com) is a donation platform built for US nonprofits. Accept one-time and recurring donations through a beautiful, embeddable widget — with automatic tax receipts, donor management, and a 1% platform fee (no monthly cost).
 
-This plugin lets you add a DonatoTomato widget to any page or post using a shortcode or a Gutenberg block, or drop a Donate button into your site's nav that opens the donation form as a pop-up.
+**Three ways to add donations to your site:**
+
+* **Floating Donate button (new in 1.3.0)** — admin-configured, appears on every page automatically. The simplest path.
+* **Inline widget** — embed the donation form directly on a page (shortcode or Gutenberg block)
+* **Donate button block** — drop a button anywhere on your site (nav, hero, footer) that opens the donation form as a pop-up
 
 **Features:**
 
-* **Inline widget** — embed the donation form directly on a page (shortcode or Gutenberg block)
-* **Donate button** — drop a button in your nav (or anywhere) that opens the donation form as a pop-up overlay (shortcode or Gutenberg block)
+* Site-wide floating Donate button — pick a campaign, label, color, size, shape, position; live preview in admin
+* Per-page exclusion list — hide the floating button on legal pages, the embedded donation page itself, etc.
+* Auto-hide on pages that already contain the inline donation widget — no double-donate-UI confusion
+* Mobile-responsive with smaller offset on small screens
 * One-time and recurring (monthly) donations
 * Automatic tax receipt emails for donors
 * Branded with your nonprofit's logo and colors
@@ -49,14 +59,26 @@ There are no third-party developer libraries vendored into this plugin. The only
 
 == Installation ==
 
+= 60-second setup (recommended) =
+
 1. Upload the plugin files to `/wp-content/plugins/donatotomato/` or install via the WordPress plugin directory.
 2. Activate the plugin through the **Plugins** menu in WordPress.
 3. Go to **Settings → DonatoTomato** and enter your Organization Slug (found in your DonatoTomato dashboard).
-4. Add a widget to any page using the shortcode or Gutenberg block.
+4. Switch to the **Floating Donate Button** tab.
+5. Toggle **Enable floating Donate button** on, pick your campaign from the dropdown, and click **Save Changes**.
+6. Visit any page on your site — the Donate button is now anchored to the bottom-right corner, on every page.
+
+= Alternative: place a Donate button or inline form manually =
+
+If you want a Donate button in a specific spot (nav menu, hero section, etc.) or want the donation form embedded inline on a page, use the Gutenberg blocks or shortcodes — see the **Usage** section below.
 
 == Usage ==
 
-There are two widget styles: an **inline embed** (donation form sits directly on a page) and a **Donate button** (button anywhere on your site opens the donation form in a pop-up overlay — perfect for site navigation).
+There are three widget styles: a **floating Donate button** (admin-configured, site-wide — recommended), an **inline embed** (donation form sits directly on a page), and a **Donate button** block (button anywhere on your site opens the donation form in a pop-up overlay).
+
+= Floating Donate button (new in 1.3.0) =
+
+Configure under **Settings → DonatoTomato → Floating Donate Button**. No shortcodes, no blocks — pick a campaign from the dropdown, tweak label/color/size/shape/position, save. The button appears on every front-end page automatically.
 
 = Inline widget =
 
@@ -88,7 +110,23 @@ With optional overrides:
 
 = Where do I find my Organization Slug and Campaign ID? =
 
-Log in to your [DonatoTomato dashboard](https://app.donatotomato.com). The organization slug is in Settings → Embed Code. Campaign IDs are listed on your Campaigns page.
+Log in to your [DonatoTomato dashboard](https://app.donatotomato.com). The organization slug is in Settings → Embed Code. Campaign IDs are listed on your Campaigns page. The floating Donate button picker shows campaigns by name (you do not need to copy the ID manually).
+
+= Does the floating Donate button work on mobile? =
+
+Yes. The button is fully responsive — on screens 640px wide and below it uses a smaller offset from the screen edge so it does not collide with iOS bottom bars or mobile cookie banners. Tap target remains thumb-sized.
+
+= Can I hide the floating Donate button on certain pages? =
+
+Yes. Under **Settings → DonatoTomato → Floating Donate Button → Visibility**, use the **Hide on these pages** picker to select any pages or posts where the button should not appear (for example, your legal pages, a thank-you page, or the embedded donation page itself). Pages that already contain the inline donation widget auto-hide the floating button by default — no double-donate-UI to confuse donors.
+
+= Will the floating Donate button slow down my site? =
+
+No. The button renders inline in the page footer with about 8KB of JavaScript loaded once site-wide. Nothing is render-blocking, no external CSS frameworks are pulled in, and the donation form itself loads only after the donor clicks the button.
+
+= Can I change the floating Donate button's color and label? =
+
+Yes. Every aspect is admin-configurable under **Settings → DonatoTomato → Floating Donate Button**: button label (with one-click presets like "Donate", "Give Now", "Support Us", "Make a Gift"), color (defaults to your widget's primary color, or pick any hex), size (Small / Medium / Large), shape (Pill / Rounded / Sharp), and position (Bottom right / Bottom left / Top right / Top left). A live preview at the bottom of the settings tab updates as you tweak the form.
 
 = Does this plugin store donor payment information? =
 
@@ -100,7 +138,7 @@ DonatoTomato charges a 1% platform fee on donations processed. There is no month
 
 = Is this plugin compatible with page builders? =
 
-The shortcode works with any page builder that supports WordPress shortcodes (Elementor, Divi, WPBakery, etc.).
+The shortcode works with any page builder that supports WordPress shortcodes (Elementor, Divi, WPBakery, etc.). The floating Donate button renders via `wp_footer` and works regardless of theme or page builder.
 
 == Third-Party Services ==
 
@@ -108,7 +146,7 @@ This plugin connects to external services operated by DonatoTomato (Dev1 Consult
 
 **DonatoTomato Platform (app.donatotomato.com)**
 
-When a visitor loads a page containing a DonatoTomato widget, their browser loads an iframe from `app.donatotomato.com`. When a page contains a DonatoTomato Donate button, the browser additionally loads a small focal-modal script (`embed.js`, ~2KB gzip) from `app.donatotomato.com` that opens the donation iframe in a pop-up overlay when the button is clicked. Donation form submissions — including donor name, email, and payment details — are transmitted to and processed by DonatoTomato and Stripe. No payment or donor data is stored on your WordPress site.
+When a visitor loads a page containing a DonatoTomato widget, their browser loads an iframe from `app.donatotomato.com`. When a page contains a DonatoTomato Donate button (including the site-wide floating Donate button), the browser additionally loads a small focal-modal script (`embed.js`, ~2KB gzip) from `app.donatotomato.com` that opens the donation iframe in a pop-up overlay when the button is clicked. The plugin admin also fetches a list of your campaigns from `app.donatotomato.com` to populate the campaign picker dropdown. Donation form submissions — including donor name, email, and payment details — are transmitted to and processed by DonatoTomato and Stripe. No payment or donor data is stored on your WordPress site.
 
 * Service: https://donatotomato.com
 * Terms of Service: https://donatotomato.com/terms
@@ -124,14 +162,20 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 
 == Screenshots ==
 
-1. Live donation widget embedded on a published page
-2. Donate button opens the donation form in a focal-modal pop-up (new in 1.2.0)
-3. Both DonatoTomato blocks available in the Gutenberg inserter
-4. DonatoTomato Widget block in the editor with campaign ID, width, and height settings
-5. Donate Button block in the editor with campaign ID and label settings (new in 1.2.0)
-6. Settings page — enter your Organization Slug
+1. One-click floating Donate button — appears on every page automatically once enabled.
+2. Configure the button in Settings → DonatoTomato — pick campaign, label, color, size, shape, position, with a live preview.
+3. Donate Button block in the Gutenberg editor — drop a Donate button in any post or page that opens the donation form as a pop-up.
+4. Donation Widget block in the Gutenberg editor — embed the donation form inline on a page.
+5. The donation modal opens when the floating button is clicked — same focal-modal donors see from the Donate Button block.
 
 == Changelog ==
+
+= 1.3.0 =
+* New: site-wide floating Donate button — admin-configured under **Settings → DonatoTomato → Floating Donate Button**, no code required. Pick a campaign, label, color, size, shape, and position; the button appears on every front-end page automatically and opens the existing donation modal on click.
+* New: campaign picker dropdown in the admin — shows campaigns by name (no copy-pasting UUIDs) with status badges.
+* New: per-page exclusion list and auto-hide on pages that already contain the inline donation widget.
+* New: live preview in the admin settings tab updates as you tweak label, color, size, shape, and position — no need to save and reload the front end to see changes.
+* Existing Donate Button block, Donation Widget block, `[donatotomato_button]` shortcode, and `[donatotomato]` shortcode are unchanged.
 
 = 1.2.2 =
 * New: block editor now flags a malformed Campaign ID inline (UUID format check) and surfaces a "View live preview" link in the inspector when both the Organization Slug and Campaign ID are set. Catches typos and slug/campaign mismatches before publishing — previously the widget would silently render a "Campaign not found" error to donors on the live page.
@@ -158,3 +202,8 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 
 = 1.0.0 =
 * Initial release
+
+== Upgrade Notice ==
+
+= 1.3.0 =
+Adds a one-click site-wide floating Donate button — configure once under Settings → DonatoTomato, appears on every page automatically. Existing blocks and shortcodes are unchanged.
