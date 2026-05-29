@@ -52,16 +52,26 @@ jobs:
           mkdir -p /tmp/plugin-check-extract
           unzip -q "donatotomato-${{ steps.version.outputs.version }}.zip" -d /tmp/plugin-check-extract
 
-      # Plugin Check via the WordPress official action — currently broken because
-      # the action requires `wp-env` initialization which the workflow doesn't
-      # set up (see DT-052 follow-up). Marked continue-on-error so a failure
-      # here doesn't gate releases. Plugin Check is independently verified
-      # locally on the extracted zip before every WP.org publish (see
-      # vault `reference_wordpress_org_submission`) and the WP.org plugin
-      # review team runs their own check on submission, so the local +
-      # upstream review remain the authoritative gates.
+      # wp-env config + boot must run BEFORE the Plugin Check action — the
+      # action runs `wp plugin check` inside the wp-env container and fails
+      # immediately with "Environment not initialized" otherwise. The .wp-env.json
+      # is generated at runtime to point wp-env at the extracted v1.3.0 zip
+      # (same path the action consumes via build-dir).
+      - name: Prepare wp-env config
+        run: |
+          cat > .wp-env.json <<'EOF'
+          {
+            "plugins": [ "/tmp/plugin-check-extract/donatotomato" ],
+            "config": { "WP_DEBUG": true }
+          }
+          EOF
+
+      - name: Start wp-env
+        run: |
+          npm install -g @wordpress/env
+          wp-env start
+
       - name: Run Plugin Check (WordPress.org review tool)
         uses: wordpress/plugin-check-action@v1
-        continue-on-error: true
         with:
           build-dir: /tmp/plugin-check-extract/donatotomato
