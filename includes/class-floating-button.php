@@ -247,13 +247,13 @@ class DonatoTomato_Floating_Button {
     /**
      * Constrain a string option value to a whitelist.
      *
-     * @param string   $value   Raw value.
-     * @param string[] $allowed Allowed values.
-     * @param string   $default Fallback.
+     * @param string   $value    Raw value.
+     * @param string[] $allowed  Allowed values.
+     * @param string   $fallback Value returned when $value is not in $allowed.
      * @return string
      */
-    private function sanitize_choice( $value, array $allowed, $default ) {
-        return in_array( $value, $allowed, true ) ? $value : $default;
+    private function sanitize_choice( $value, array $allowed, $fallback ) {
+        return in_array( $value, $allowed, true ) ? $value : $fallback;
     }
 
     /**

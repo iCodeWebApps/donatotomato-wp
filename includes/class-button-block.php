@@ -37,7 +37,12 @@ class DonatoTomato_Button_Block {
         // (with adjusted relative paths inside the JSON), or we do what
         // follows: decode the JSON ourselves, register the editor script
         // and style handles manually, and pass everything as $args.
-        $metadata = json_decode( file_get_contents( $json_path ), true );
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Reading a local plugin file shipped with the plugin; wp_remote_get is for HTTP URLs, not the filesystem.
+        $json_raw = file_get_contents( $json_path );
+        if ( false === $json_raw ) {
+            return;
+        }
+        $metadata = json_decode( $json_raw, true );
         if ( ! is_array( $metadata ) || empty( $metadata['name'] ) ) {
             return;
         }
@@ -46,7 +51,10 @@ class DonatoTomato_Button_Block {
         if ( ! wp_script_is( $script_handle, 'registered' ) ) {
             $asset = file_exists( $asset_path )
                 ? include $asset_path
-                : array( 'dependencies' => array(), 'version' => DONATOTOMATO_VERSION );
+                : array(
+                    'dependencies' => array(),
+                    'version'      => DONATOTOMATO_VERSION,
+                );
             wp_register_script(
                 $script_handle,
                 DONATOTOMATO_PLUGIN_URL . 'build/index.js',
