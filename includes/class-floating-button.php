@@ -53,9 +53,13 @@ class DonatoTomato_Floating_Button {
     }
 
     /**
-     * Heuristic detection. Matches the Gutenberg block comment delimiter
-     * and the [donatotomato] shortcode (NOT the [donatotomato_button]
-     * shortcode — buttons are fine alongside the floating button).
+     * Heuristic detection. Matches:
+     *   - the Gutenberg block comment delimiter (<!-- wp:donatotomato/widget -->)
+     *   - the [donatotomato] shortcode (NOT [donatotomato_button] — buttons are
+     *     fine alongside the floating button)
+     *   - a raw <iframe src="https://app.donatotomato.com/widget/..."> pasted
+     *     into a Custom HTML block or copied from another donation page (covers
+     *     customers who do not use the Gutenberg block or shortcode).
      *
      * @param string $content Post content.
      * @return bool True if inline widget present.
@@ -64,11 +68,18 @@ class DonatoTomato_Floating_Button {
         if ( ! is_string( $content ) || '' === $content ) {
             return false;
         }
-        if ( false !== strpos( $content, '<!-- wp:donatotomato/block' ) ) {
+        if ( false !== strpos( $content, '<!-- wp:donatotomato/widget' ) ) {
             return true;
         }
         // Match [donatotomato ...] / [donatotomato] but not [donatotomato_button].
         if ( preg_match( '/\[donatotomato(?![_a-z])[^\]]*\]/i', $content ) ) {
+            return true;
+        }
+        // Match a raw <iframe ... src="https://app.donatotomato.com/widget/...">
+        // pasted into a Custom HTML block or template. Allows http/https,
+        // any attribute order, single or double quotes around the src value,
+        // and does not require the closing > to be in the same chunk.
+        if ( preg_match( '~<iframe\b[^>]*?\bsrc\s*=\s*["\']https?://[^"\']*?app\.donatotomato\.com/widget/~i', $content ) ) {
             return true;
         }
         return false;

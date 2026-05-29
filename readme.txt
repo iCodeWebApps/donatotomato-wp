@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.2.2
+Stable tag: 1.4.0
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -169,6 +169,10 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 5. The donation modal opens when the floating button is clicked — same focal-modal donors see from the Donate Button block.
 
 == Changelog ==
+
+= 1.4.0 =
+* Improved: floating Donate button auto-hide now also detects pages with a raw `<iframe src="https://app.donatotomato.com/widget/...">` pasted into a Custom HTML block or copied from another donation page (in addition to the Gutenberg block and `[donatotomato]` shortcode already detected). Customers no longer need to manually exclude such pages from the floating button.
+* Fix: the Gutenberg block delimiter check that drives auto-hide now matches the actual block name `donatotomato/widget` (previously the check was looking for a non-existent `donatotomato/block` delimiter and quietly never matched).
 
 = 1.3.0 =
 * New: site-wide floating Donate button — admin-configured under **Settings → DonatoTomato → Floating Donate Button**, no code required. Pick a campaign, label, color, size, shape, and position; the button appears on every front-end page automatically and opens the existing donation modal on click.
