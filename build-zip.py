@@ -22,9 +22,13 @@ FILES = [
     'includes/class-embed-loader.php',
     'includes/class-button-block.php',
     'includes/class-button-shortcode.php',
+    'includes/class-campaign-picker.php',
+    'includes/class-floating-button.php',
     'assets/css/donatotomato.css',
     'assets/css/donatotomato-button.css',
     'assets/js/resize.js',
+    'assets/admin/settings.css',
+    'assets/admin/settings.js',
     'build/index.asset.php',
     'build/index.js',
 ]
