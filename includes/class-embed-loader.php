@@ -23,7 +23,33 @@ class DonatoTomato_Embed_Loader {
      */
     public static function bootstrap() {
         add_action( 'wp_enqueue_scripts', [ __CLASS__, 'register' ] );
+        add_action( 'wp_enqueue_scripts', [ __CLASS__, 'maybe_enqueue_for_floating_button' ], 20 );
         add_filter( 'script_loader_tag', [ __CLASS__, 'add_tenant_attribute' ], 10, 2 );
+    }
+
+    /**
+     * Auto-enqueue embed.js site-wide when the floating Donate button is
+     * enabled in plugin settings. Without this, embed.js would only load
+     * on pages that contain the v1.2.0 button block/shortcode — but the
+     * floating button is rendered late (wp_footer) and the click handler
+     * needs to be in place before the user can click. wp_enqueue_script
+     * is idempotent on the handle, so this is safe if a page also contains
+     * a v1.2.0 button.
+     */
+    public static function maybe_enqueue_for_floating_button() {
+        if ( is_admin() ) {
+            return;
+        }
+        if ( '1' !== (string) get_option( 'donatotomato_floating_enabled', '0' ) ) {
+            return;
+        }
+        if ( '' === trim( (string) get_option( 'donatotomato_org_slug', '' ) ) ) {
+            return;
+        }
+        if ( '' === trim( (string) get_option( 'donatotomato_floating_campaign', '' ) ) ) {
+            return;
+        }
+        wp_enqueue_script( self::HANDLE );
     }
 
     public static function register() {

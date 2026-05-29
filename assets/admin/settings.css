@@ -1,0 +1,193 @@
+/* DonatoTomato — admin settings page (Floating Donate Button tab). */
+
+.donatotomato-settings .nav-tab-wrapper {
+    margin-bottom: 1.25rem;
+}
+
+.donatotomato-section {
+    margin: 0 0 1.75rem;
+    padding: 1rem 1.25rem 0.75rem;
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+}
+
+.donatotomato-section h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    color: #1d2327;
+}
+
+.donatotomato-section .form-table th {
+    width: 200px;
+    vertical-align: top;
+    padding-top: 14px;
+}
+
+.donatotomato-fieldset[disabled] {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+/* Campaign picker */
+.donatotomato-campaign-picker {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.donatotomato-campaign-select {
+    min-width: 280px;
+}
+.donatotomato-picker-status {
+    margin: 6px 0 0;
+    min-height: 1.4em;
+    color: #50575e;
+    font-style: italic;
+}
+.donatotomato-picker-status.is-error {
+    color: #b32d2e;
+    font-style: normal;
+}
+.donatotomato-picker-status.is-warning {
+    color: #996800;
+    font-style: normal;
+}
+
+.donatotomato-picker-status a {
+    margin-left: 0.5em;
+}
+
+/* Label preset chips */
+.donatotomato-label-chips {
+    margin: 0.5rem 0 0;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* Segmented control */
+.donatotomato-segmented {
+    display: inline-flex;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.donatotomato-segmented__option {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    background: #fff;
+    cursor: pointer;
+    border-right: 1px solid #c3c4c7;
+    font-size: 13px;
+}
+.donatotomato-segmented__option:last-child {
+    border-right: 0;
+}
+.donatotomato-segmented__option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.donatotomato-segmented__option:has(input:checked) {
+    background: #2271b1;
+    color: #fff;
+    font-weight: 600;
+}
+/* :has() fallback via JS-applied class. */
+.donatotomato-segmented__option.is-active {
+    background: #2271b1;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Offset slider */
+.donatotomato-offset-input {
+    vertical-align: middle;
+    width: 240px;
+}
+.donatotomato-offset-value {
+    margin-left: 8px;
+    font-variant-numeric: tabular-nums;
+}
+
+.donatotomato-advanced {
+    margin-top: 4px;
+    padding: 8px 0;
+}
+.donatotomato-advanced summary {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Live preview */
+.donatotomato-preview {
+    margin: 1rem 0 0;
+}
+.donatotomato-preview-frame {
+    position: relative;
+    width: 360px;
+    height: 220px;
+    background: linear-gradient(180deg, #f6f7f7 0%, #ffffff 100%);
+    border: 1px solid #dcdcde;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.02);
+    overflow: hidden;
+}
+.donatotomato-preview-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 24px;
+    background: #1d2327;
+    opacity: 0.85;
+}
+.donatotomato-preview-line {
+    position: absolute;
+    height: 8px;
+    background: #dcdcde;
+    border-radius: 4px;
+}
+.donatotomato-preview-line--1 {
+    top: 50px;
+    left: 24px;
+    width: 60%;
+}
+.donatotomato-preview-line--2 {
+    top: 70px;
+    left: 24px;
+    width: 78%;
+}
+.donatotomato-preview-line--3 {
+    top: 90px;
+    left: 24px;
+    width: 45%;
+}
+.donatotomato-preview-button {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+    border: 0;
+    cursor: default;
+    font-weight: 600;
+    background: #10b981;
+    color: #ffffff;
+    padding: 14px 28px;
+    font-size: 15px;
+    border-radius: 9999px;
+    bottom: 24px;
+    right: 24px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+}
+.donatotomato-preview-button__heart {
+    display: none;
+    font-size: 1.05em;
+    line-height: 1;
+}
+.donatotomato-preview-button.has-heart .donatotomato-preview-button__heart {
+    display: inline;
+}
