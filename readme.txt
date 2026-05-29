@@ -163,10 +163,9 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 == Screenshots ==
 
 1. One-click floating Donate button — appears on every page automatically once enabled.
-2. Configure the button in Settings → DonatoTomato — pick campaign, label, color, size, shape, position, with a live preview.
-3. Donate Button block in the Gutenberg editor — drop a Donate button in any post or page that opens the donation form as a pop-up.
-4. Donation Widget block in the Gutenberg editor — embed the donation form inline on a page.
-5. The donation modal opens when the floating button is clicked — same focal-modal donors see from the Donate Button block.
+2. The donation modal opens when the floating button is clicked — same focal-modal pop-up donors see from the Donate Button block.
+3. Settings → DonatoTomato — pick a campaign from the live-populated dropdown, set label and styling.
+4. Settings → DonatoTomato — position, visibility rules, and live preview of the button.
 
 == Changelog ==
 
