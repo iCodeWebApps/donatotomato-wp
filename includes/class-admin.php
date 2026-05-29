@@ -52,6 +52,8 @@ class DonatoTomato_Admin {
     /**
      * Enqueue tab CSS + the picker/live-preview JS on this plugin's settings
      * screen only.
+     *
+     * @param string $hook_suffix Current admin page hook suffix.
      */
     public function enqueue_admin_assets( $hook_suffix ) {
         if ( 'settings_page_' . self::PAGE_SLUG !== $hook_suffix ) {
@@ -634,7 +636,12 @@ class DonatoTomato_Admin {
                                             size="6"
                                             style="min-width:320px;">
                                         <?php
-                                        $pages = get_pages( [ 'sort_column' => 'post_title', 'number' => 200 ] );
+                                        $pages = get_pages(
+                                            [
+                                                'sort_column' => 'post_title',
+                                                'number'      => 200,
+                                            ]
+                                        );
                                         $exclude_ids_int = array_map( 'intval', $exclude_ids );
                                         foreach ( $pages as $page ) :
                                             ?>
