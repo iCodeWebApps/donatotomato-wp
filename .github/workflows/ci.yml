@@ -52,16 +52,29 @@ jobs:
           mkdir -p /tmp/plugin-check-extract
           unzip -q "donatotomato-${{ steps.version.outputs.version }}.zip" -d /tmp/plugin-check-extract
 
-      # Plugin Check via the WordPress official action — currently broken because
-      # the action requires `wp-env` initialization which the workflow doesn't
-      # set up (see DT-052 follow-up). Marked continue-on-error so a failure
-      # here doesn't gate releases. Plugin Check is independently verified
-      # locally on the extracted zip before every WP.org publish (see
-      # vault `reference_wordpress_org_submission`) and the WP.org plugin
-      # review team runs their own check on submission, so the local +
-      # upstream review remain the authoritative gates.
+      # Plugin Check via direct wp-env invocation — the wordpress/plugin-check-action
+      # has its own wp-env setup logic that conflicts with ours (it ignores a
+      # pre-existing .wp-env.json in the repo root, then tries to spin up its own
+      # environment, hitting "service cli is not running"). Skipping the action
+      # and running the Plugin Check CLI directly inside our wp-env container is
+      # simpler + works. Same end result: `wp plugin check donatotomato` runs
+      # the official WordPress.org review tool against the extracted v1.3.0 zip.
+      - name: Prepare wp-env config
+        run: |
+          cat > .wp-env.json <<'EOF'
+          {
+            "plugins": [ "/tmp/plugin-check-extract/donatotomato" ],
+            "config": { "WP_DEBUG": true },
+            "testsEnvironment": false
+          }
+          EOF
+
+      - name: Start wp-env
+        run: |
+          npm install -g @wordpress/env
+          wp-env start
+
       - name: Run Plugin Check (WordPress.org review tool)
-        uses: wordpress/plugin-check-action@v1
-        continue-on-error: true
-        with:
-          build-dir: /tmp/plugin-check-extract/donatotomato
+        run: |
+          wp-env run cli wp plugin install plugin-check --activate
+          wp-env run cli wp plugin check donatotomato
