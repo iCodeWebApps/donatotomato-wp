@@ -28,7 +28,7 @@ class DonatoTomato_Admin {
      * Inject config (slug, app URL, dashboard URLs) into window.donatotomatoBlockEditor
      * so the block editor JS can render the campaign picker + helpful CTAs in
      * the block inspector. The REST nonce + base URL are handled separately by
-     * @wordpress/api-fetch (already enqueued site-wide in the editor).
+     * the WordPress api-fetch module (already enqueued site-wide in the editor).
      */
     public function expose_block_editor_config() {
         wp_add_inline_script(
