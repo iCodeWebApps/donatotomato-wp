@@ -38,7 +38,7 @@ Gutenberg block: search for **DonatoTomato Widget** in the block inserter. Enter
 
 ### Donate button (pop-up modal trigger)
 
-Drops a button anywhere (nav menu, hero CTA, footer) that opens the donation form as a focal-modal pop-up — matches the pattern used by Givebutter, Fundraise Up, Donorbox, etc.
+Drops a button anywhere (nav menu, hero CTA, footer) that opens the donation form as a focal-modal pop-up — the standard donate-button trigger pattern across donation platforms.
 
 ```
 [donatotomato_button campaign="your-campaign-id"]
