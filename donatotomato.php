@@ -29,6 +29,7 @@ require_once DONATOTOMATO_PLUGIN_DIR . 'includes/class-button-shortcode.php';
 require_once DONATOTOMATO_PLUGIN_DIR . 'includes/class-button-block.php';
 require_once DONATOTOMATO_PLUGIN_DIR . 'includes/class-campaign-picker.php';
 require_once DONATOTOMATO_PLUGIN_DIR . 'includes/class-floating-button.php';
+require_once DONATOTOMATO_PLUGIN_DIR . 'includes/class-activation-notice.php';
 
 new DonatoTomato_Admin();
 new DonatoTomato_Shortcode();
@@ -38,3 +39,6 @@ new DonatoTomato_Button_Shortcode();
 new DonatoTomato_Button_Block();
 new DonatoTomato_Campaign_Picker();
 new DonatoTomato_Floating_Button();
+new DonatoTomato_Activation_Notice();
+
+register_activation_hook( __FILE__, [ 'DonatoTomato_Activation_Notice', 'on_activate' ] );
