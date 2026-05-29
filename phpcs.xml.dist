@@ -38,6 +38,14 @@
         <exclude name="PEAR.Functions.FunctionCallSignature.Indent"/>
         <exclude name="Universal.Files.SeparateFunctionsFromOO"/>
 
+        <!-- Whitespace-alignment warnings. The CI step pipes through cs2pr, which
+             treats any PHPCS message (warning OR error) as a failing annotation,
+             so cosmetic alignment noise breaks the build. Plugin Check (the WP.org
+             reviewer tool) doesn't flag these. -->
+        <exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned"/>
+        <exclude name="Generic.Formatting.MultipleStatementAlignment"/>
+        <exclude name="Universal.WhiteSpace.PrecisionAlignment"/>
+
         <!-- Docblocks are a documentation-hygiene preference; the plugin's PHP surface is small
              and self-documenting. The reviewer-relevant docblocks (Plugin Name header) are present. -->
         <exclude name="Squiz.Commenting.FileComment.Missing"/>
