@@ -24,6 +24,7 @@ FILES = [
     'includes/class-button-shortcode.php',
     'includes/class-campaign-picker.php',
     'includes/class-floating-button.php',
+    'includes/class-activation-notice.php',
     'assets/css/donatotomato.css',
     'assets/css/donatotomato-button.css',
     'assets/js/resize.js',

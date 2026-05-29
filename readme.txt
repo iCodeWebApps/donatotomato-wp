@@ -171,6 +171,7 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 == Changelog ==
 
 = 1.4.0 =
+* New: first-activation onboarding notice — on the first admin page load after activating the plugin, a dismissible notice points new installers to the Floating Donate Button settings tab. The notice is suppressed if the floating button is already configured (upgrade path), only shows to users with the manage_options capability, and persists dismissal per-user so it does not re-appear after deactivate/reactivate cycles.
 * Improved: floating Donate button auto-hide now also detects pages with a raw `<iframe src="https://app.donatotomato.com/widget/...">` pasted into a Custom HTML block or copied from another donation page (in addition to the Gutenberg block and `[donatotomato]` shortcode already detected). Customers no longer need to manually exclude such pages from the floating button.
 * Fix: the Gutenberg block delimiter check that drives auto-hide now matches the actual block name `donatotomato/widget` (previously the check was looking for a non-existent `donatotomato/block` delimiter and quietly never matched).
 
@@ -208,6 +209,9 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+Adds a first-activation onboarding notice that points new installers at the Floating Donate Button settings tab, and extends the floating-button auto-hide to also detect raw `<iframe>` embeds. No behavioral changes for existing users who already configured the floating button.
 
 = 1.3.0 =
 Adds a one-click site-wide floating Donate button — configure once under Settings → DonatoTomato, appears on every page automatically. Existing blocks and shortcodes are unchanged.
