@@ -171,9 +171,14 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 == Changelog ==
 
 = 1.4.0 =
+* New: campaign picker dropdown in both block inspectors (Donation Widget block + Donate Button block) — pick a campaign from a list of names with status badges (Active / Draft / Paused) instead of pasting a UUID. Mirrors the floating-button picker UX.
+* New: "Refresh" control next to the picker busts the 5-minute server-side cache so admins see new campaigns immediately.
+* New: empty-state notice with a link to **Settings → DonatoTomato** when the Organization Slug is unset.
+* New: collapsed **Advanced** disclosure inside both block inspectors preserves the manual UUID-paste path for power users.
 * New: first-activation onboarding notice — on the first admin page load after activating the plugin, a dismissible notice points new installers to the Floating Donate Button settings tab. The notice is suppressed if the floating button is already configured (upgrade path), only shows to users with the manage_options capability, and persists dismissal per-user so it does not re-appear after deactivate/reactivate cycles.
 * Improved: floating Donate button auto-hide now also detects pages with a raw `<iframe src="https://app.donatotomato.com/widget/...">` pasted into a Custom HTML block or copied from another donation page (in addition to the Gutenberg block and `[donatotomato]` shortcode already detected). Customers no longer need to manually exclude such pages from the floating button.
 * Fix: the Gutenberg block delimiter check that drives auto-hide now matches the actual block name `donatotomato/widget` (previously the check was looking for a non-existent `donatotomato/block` delimiter and quietly never matched).
+* Existing saved blocks continue to render correctly — the underlying `campaignId` attribute is unchanged.
 
 = 1.3.0 =
 * New: site-wide floating Donate button — admin-configured under **Settings → DonatoTomato → Floating Donate Button**, no code required. Pick a campaign, label, color, size, shape, and position; the button appears on every front-end page automatically and opens the existing donation modal on click.
@@ -211,7 +216,7 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 == Upgrade Notice ==
 
 = 1.4.0 =
-Adds a first-activation onboarding notice that points new installers at the Floating Donate Button settings tab, and extends the floating-button auto-hide to also detect raw `<iframe>` embeds. No behavioral changes for existing users who already configured the floating button.
+The Donation Widget block and Donate Button block now show a campaign picker dropdown in the editor sidebar — pick a campaign by name with status badges, no more pasting UUIDs. Adds a first-activation onboarding notice that points new installers at the Floating Donate Button settings tab, and extends the floating-button auto-hide to also detect raw `<iframe>` embeds. Existing saved blocks continue to render correctly.
 
 = 1.3.0 =
 Adds a one-click site-wide floating Donate button — configure once under Settings → DonatoTomato, appears on every page automatically. Existing blocks and shortcodes are unchanged.

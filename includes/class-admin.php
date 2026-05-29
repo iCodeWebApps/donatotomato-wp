@@ -25,15 +25,20 @@ class DonatoTomato_Admin {
     }
 
     /**
-     * Inject the configured org slug + app URL into window.donatotomatoBlockEditor
-     * so the block editor JS can show a "View live preview" link in the inspector.
+     * Inject config (slug, app URL, dashboard URLs) into window.donatotomatoBlockEditor
+     * so the block editor JS can render the campaign picker + helpful CTAs in
+     * the block inspector. The REST nonce + base URL are handled separately by
+     * @wordpress/api-fetch (already enqueued site-wide in the editor).
      */
     public function expose_block_editor_config() {
         wp_add_inline_script(
             'wp-blocks',
             'window.donatotomatoBlockEditor = ' . wp_json_encode( [
-                'defaultSlug' => get_option( 'donatotomato_org_slug', '' ),
-                'appUrl'      => untrailingslashit( DONATOTOMATO_APP_URL ),
+                'defaultSlug'  => get_option( 'donatotomato_org_slug', '' ),
+                'appUrl'       => untrailingslashit( DONATOTOMATO_APP_URL ),
+                'settingsUrl'  => admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ),
+                'signupUrl'    => 'https://app.donatotomato.com/auth',
+                'campaignsUrl' => 'https://app.donatotomato.com/campaigns',
             ] ) . ';',
             'before'
         );
