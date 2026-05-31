@@ -108,9 +108,9 @@ With optional overrides:
 
 == Frequently Asked Questions ==
 
-= Where do I find my Organization Slug and Campaign ID? =
+= Where do I find my Organization ID? =
 
-Log in to your [DonatoTomato dashboard](https://app.donatotomato.com). The organization slug is in Settings → Embed Code. Campaign IDs are listed on your Campaigns page. The floating Donate button picker shows campaigns by name (you do not need to copy the ID manually).
+Don't have a DonatoTomato account yet? Create one free at [donatotomato.com](https://app.donatotomato.com/auth). Once you're in, open any campaign in your dashboard — your Organization ID is shown in the "Add to your website" panel, with a one-click Copy button. Paste it into Settings → DonatoTomato → General. The floating Donate button picker then lists your campaigns by name (no need to copy IDs manually).
 
 = Does the floating Donate button work on mobile? =
 
