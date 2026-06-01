@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -15,6 +15,8 @@ Add a floating Donate button to every page of your nonprofit site in 60 seconds.
 Add a Donate button to every page of your nonprofit site in 60 seconds. No theme edits, no HTML, no developer.
 
 DonatoTomato's WordPress plugin gives you a one-time admin setup — pick a campaign, pick a position, save — and a styled floating Donate button appears site-wide. Clicking it opens your donation form in a focal-modal pop-up. The button is responsive, theme-compatible, and accessible by default.
+
+**Before you start:** the plugin connects to a free DonatoTomato account where your campaigns and payments live. If you don't have one yet, you can create it (about 2 minutes) right from the plugin's setup screen — then paste your Organization ID into the plugin and you're done.
 
 [DonatoTomato](https://donatotomato.com) is a donation platform built for US nonprofits. Accept one-time and recurring donations through a beautiful, embeddable widget — with automatic tax receipts, donor management, and a 1% platform fee (no monthly cost).
 
@@ -168,6 +170,13 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 4. Settings → DonatoTomato — position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.2 =
+* Improved: the setup field and prompts now consistently say "Organization ID" (the value you copy from your DonatoTomato dashboard), instead of a mix of "Organization ID" and "Organization Slug" — one less "are these the same thing?" moment when pasting it in.
+* Improved: the General tab now leads with the no-code floating Donate button and a one-click "Set up" button; shortcode and block options moved into an "Advanced / for developers" section so a non-technical setup isn't faced with code first.
+* Improved: after you save the floating button, the settings screen confirms "Your Donate button is live" with a link to view your site, and the first-time setup notice no longer lingers once the button is enabled.
+* Improved: the "Create a free account" links carry a hint that you arrived from WordPress, so the sign-up flow can guide you back to finish faster.
+* Improved: the listing now states up front that a free DonatoTomato account is part of setup, so there are no surprises mid-install.
 
 = 1.4.1 =
 * Improved: first-time setup is now account-aware. The Floating Donate Button tab leads with a "Create a free account" action for anyone who doesn't have a DonatoTomato account yet, instead of dead-ending at "Open General tab."

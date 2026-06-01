@@ -59,6 +59,13 @@ class DonatoTomato_Activation_Notice {
         if ( ! get_transient( self::TRANSIENT_KEY ) ) {
             return;
         }
+        // If the floating button has since been enabled (the user completed the
+        // very setup this notice nags about), suppress it and clear the signal —
+        // a lingering "quick setup" prompt undercuts the "you're done" state.
+        if ( '1' === (string) get_option( 'donatotomato_floating_enabled', '0' ) ) {
+            delete_transient( self::TRANSIENT_KEY );
+            return;
+        }
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }

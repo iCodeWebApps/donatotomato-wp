@@ -1,7 +1,7 @@
 <?php
 /**
  * Admin settings page for DonatoTomato. Two tabs:
- *   - General: Organization Slug + usage docs.
+ *   - General: Organization ID + usage docs.
  *   - Floating Donate Button: enable, campaign picker, style, placement,
  *     visibility, live preview.
  *
@@ -37,7 +37,7 @@ class DonatoTomato_Admin {
                 'defaultSlug'  => get_option( 'donatotomato_org_slug', '' ),
                 'appUrl'       => untrailingslashit( DONATOTOMATO_APP_URL ),
                 'settingsUrl'  => admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ),
-                'signupUrl'    => 'https://app.donatotomato.com/auth',
+                'signupUrl'    => 'https://app.donatotomato.com/auth?from=wp',
                 'campaignsUrl' => 'https://app.donatotomato.com/campaigns',
             ] ) . ';',
             'before'
@@ -91,7 +91,7 @@ class DonatoTomato_Admin {
                 'orgSlug'       => get_option( 'donatotomato_org_slug', '' ),
                 'savedCampaign' => get_option( 'donatotomato_floating_campaign', '' ),
                 'generalTabUrl' => esc_url( admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ) ),
-                'signupUrl'     => 'https://app.donatotomato.com/auth',
+                'signupUrl'     => 'https://app.donatotomato.com/auth?from=wp',
                 'campaignsUrl'  => 'https://app.donatotomato.com/campaigns',
                 'strings'       => $this->get_admin_strings(),
             ]
@@ -104,7 +104,7 @@ class DonatoTomato_Admin {
             'refresh'             => __( 'Refresh', 'donatotomato' ),
             'refreshing'          => __( 'Refreshing…', 'donatotomato' ),
             'loading'             => __( 'Loading campaigns…', 'donatotomato' ),
-            'missingSlug'         => __( 'First, tell us who you are — set your Organization Slug in the General tab to enable the floating Donate button.', 'donatotomato' ),
+            'missingSlug'         => __( 'First, tell us who you are — set your Organization ID in the General tab to enable the floating Donate button.', 'donatotomato' ),
             'missingSlugCta'      => __( 'Open General tab', 'donatotomato' ),
             /* translators: %s: organization slug currently configured in plugin settings */
             'noCampaigns'         => __( 'No campaigns found for "%s" — log in to your DonatoTomato dashboard and create a campaign, then come back here.', 'donatotomato' ),
@@ -201,7 +201,7 @@ class DonatoTomato_Admin {
         add_settings_section( 'donatotomato_main', '', null, self::PAGE_SLUG );
         add_settings_field(
             'donatotomato_org_slug',
-            __( 'Organization Slug', 'donatotomato' ),
+            __( 'Organization ID', 'donatotomato' ),
             [ $this, 'render_slug_field' ],
             self::PAGE_SLUG,
             'donatotomato_main'
@@ -288,14 +288,14 @@ class DonatoTomato_Admin {
             name="donatotomato_org_slug"
             value="<?php echo esc_attr( $slug ); ?>"
             class="regular-text"
-            placeholder="your-org-slug"
+            placeholder="your-organization-id"
         />
         <p class="description">
             <?php
             printf(
                 /* translators: 1: create-account link, 2: campaigns dashboard link */
-                wp_kses_post( __( 'New to DonatoTomato? %1$s — it\'s free. Already have an account? Open any campaign in your %2$s and copy the Organization ID shown in its "Add to your website" panel, then paste it here. Used as the default slug for all widgets on this site.', 'donatotomato' ) ),
-                '<a href="' . esc_url( 'https://app.donatotomato.com/auth' ) . '" target="_blank" rel="noopener">' . esc_html__( 'Create a free account', 'donatotomato' ) . '</a>',
+                wp_kses_post( __( 'New to DonatoTomato? %1$s — it\'s free. Already have an account? Open any campaign in your %2$s and copy the Organization ID shown in its "Add to your website" panel, then paste it here. Used as the default Organization ID for all widgets on this site.', 'donatotomato' ) ),
+                '<a href="' . esc_url( 'https://app.donatotomato.com/auth?from=wp' ) . '" target="_blank" rel="noopener">' . esc_html__( 'Create a free account', 'donatotomato' ) . '</a>',
                 '<a href="' . esc_url( 'https://app.donatotomato.com/campaigns' ) . '" target="_blank" rel="noopener">' . esc_html__( 'DonatoTomato dashboard', 'donatotomato' ) . '</a>'
             );
             ?>
@@ -353,26 +353,35 @@ class DonatoTomato_Admin {
             ?>
         </form>
         <hr />
-        <h2><?php esc_html_e( 'Usage', 'donatotomato' ); ?></h2>
+        <h2><?php esc_html_e( 'Add donations to your site', 'donatotomato' ); ?></h2>
 
-        <h3><?php esc_html_e( 'Inline widget', 'donatotomato' ); ?></h3>
-        <p><?php esc_html_e( 'Embeds the donation form directly on the page.', 'donatotomato' ); ?></p>
-        <p><strong><?php esc_html_e( 'Shortcode:', 'donatotomato' ); ?></strong></p>
-        <code>[donatotomato campaign="your-campaign-id"]</code>
-        <p><?php esc_html_e( 'Override the org slug for a specific widget:', 'donatotomato' ); ?></p>
-        <code>[donatotomato slug="other-org" campaign="your-campaign-id" width="480" height="600"]</code>
-        <p><strong><?php esc_html_e( 'Gutenberg block:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'Search for "DonatoTomato Widget" in the block inserter.', 'donatotomato' ); ?></p>
+        <h3><?php esc_html_e( 'Floating Donate button — recommended, no code', 'donatotomato' ); ?></h3>
+        <p><?php esc_html_e( 'The simplest path: a site-wide Donate button that appears on every page automatically. Pick a campaign, a position, and a style — no shortcodes, no HTML, no developer.', 'donatotomato' ); ?></p>
+        <p>
+            <a href="<?php echo esc_url( add_query_arg( 'tab', 'floating', admin_url( 'options-general.php?page=' . self::PAGE_SLUG ) ) ); ?>" class="button button-primary">
+                <?php esc_html_e( 'Set up the floating Donate button', 'donatotomato' ); ?>
+            </a>
+        </p>
 
-        <h3><?php esc_html_e( 'Donate button (pop-up)', 'donatotomato' ); ?></h3>
-        <p><?php esc_html_e( 'Adds a button that opens the donation form in a focal-modal pop-up. Use it in your nav menu, hero CTA, or anywhere else.', 'donatotomato' ); ?></p>
-        <p><strong><?php esc_html_e( 'Shortcode:', 'donatotomato' ); ?></strong></p>
-        <code>[donatotomato_button campaign="your-campaign-id"]</code>
-        <p><?php esc_html_e( 'With a custom label and CSS class:', 'donatotomato' ); ?></p>
-        <code>[donatotomato_button campaign="your-campaign-id" label="Give now" class="my-custom-class"]</code>
-        <p><strong><?php esc_html_e( 'Gutenberg block:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'Search for "DonatoTomato Donate Button" in the block inserter.', 'donatotomato' ); ?></p>
+        <details class="donatotomato-advanced-usage">
+            <summary><?php esc_html_e( 'Advanced / for developers — shortcodes & blocks', 'donatotomato' ); ?></summary>
 
-        <h3><?php esc_html_e( 'Floating Donate button', 'donatotomato' ); ?></h3>
-        <p><?php esc_html_e( 'For a site-wide always-visible Donate button (no per-page placement), use the Floating Donate Button tab above.', 'donatotomato' ); ?></p>
+            <h3><?php esc_html_e( 'Inline widget', 'donatotomato' ); ?></h3>
+            <p><?php esc_html_e( 'Embeds the donation form directly on the page.', 'donatotomato' ); ?></p>
+            <p><strong><?php esc_html_e( 'Shortcode:', 'donatotomato' ); ?></strong></p>
+            <code>[donatotomato campaign="your-campaign-id"]</code>
+            <p><?php esc_html_e( 'Override the org slug for a specific widget:', 'donatotomato' ); ?></p>
+            <code>[donatotomato slug="other-org" campaign="your-campaign-id" width="480" height="600"]</code>
+            <p><strong><?php esc_html_e( 'Gutenberg block:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'Search for "DonatoTomato Widget" in the block inserter.', 'donatotomato' ); ?></p>
+
+            <h3><?php esc_html_e( 'Donate button (pop-up)', 'donatotomato' ); ?></h3>
+            <p><?php esc_html_e( 'Adds a button that opens the donation form in a focal-modal pop-up. Use it in your nav menu, hero CTA, or anywhere else.', 'donatotomato' ); ?></p>
+            <p><strong><?php esc_html_e( 'Shortcode:', 'donatotomato' ); ?></strong></p>
+            <code>[donatotomato_button campaign="your-campaign-id"]</code>
+            <p><?php esc_html_e( 'With a custom label and CSS class:', 'donatotomato' ); ?></p>
+            <code>[donatotomato_button campaign="your-campaign-id" label="Give now" class="my-custom-class"]</code>
+            <p><strong><?php esc_html_e( 'Gutenberg block:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'Search for "DonatoTomato Donate Button" in the block inserter.', 'donatotomato' ); ?></p>
+        </details>
         <?php
     }
 
@@ -407,6 +416,25 @@ class DonatoTomato_Admin {
         ?>
         <div class="donatotomato-floating-tab" data-org-slug="<?php echo esc_attr( $org_slug ); ?>">
 
+            <?php
+            // After a successful Save on the floating tab, give a non-technical
+            // user a clear "it's live" close-out with a link to the front-end,
+            // so they know the button is actually on their site.
+            if ( isset( $_GET['settings-updated'] ) && $enabled && '' !== $org_slug && '' !== $campaign ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- settings-updated is set by the Settings API redirect; read-only display.
+                ?>
+                <div class="notice notice-success inline donatotomato-live-notice">
+                    <p>
+                        <strong><?php esc_html_e( 'Your Donate button is live.', 'donatotomato' ); ?></strong>
+                        <?php esc_html_e( 'It now appears on every page of your site.', 'donatotomato' ); ?>
+                        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" target="_blank" rel="noopener">
+                            <?php esc_html_e( 'View your site →', 'donatotomato' ); ?>
+                        </a>
+                    </p>
+                </div>
+                <?php
+            endif;
+            ?>
+
             <?php if ( '' === $org_slug ) : ?>
                 <div class="notice notice-warning inline">
                     <p>
@@ -414,7 +442,7 @@ class DonatoTomato_Admin {
                         <?php esc_html_e( 'The floating Donate button needs your free DonatoTomato account. If you don\'t have one yet, create it (about 2 minutes) — then add your Organization ID in the General tab.', 'donatotomato' ); ?>
                     </p>
                     <p>
-                        <a href="<?php echo esc_url( 'https://app.donatotomato.com/auth' ); ?>" class="button button-primary" target="_blank" rel="noopener">
+                        <a href="<?php echo esc_url( 'https://app.donatotomato.com/auth?from=wp' ); ?>" class="button button-primary" target="_blank" rel="noopener">
                             <?php esc_html_e( 'Create a free account', 'donatotomato' ); ?>
                         </a>
                         <a href="<?php echo esc_url( admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ) ); ?>" class="button">
