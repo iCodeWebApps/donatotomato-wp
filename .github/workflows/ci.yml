@@ -42,7 +42,9 @@ jobs:
 
       - name: Read version
         id: version
-        run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
+        run: |
+          version=$(sed -n 's/^[[:space:]]*\*[[:space:]]*Version:[[:space:]]*\([^[:space:]]*\).*/\1/p' donatotomato.php | head -n1)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - name: Build distribution zip
         run: python3 build-zip.py
