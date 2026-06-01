@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -170,6 +170,9 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 4. Settings → DonatoTomato — position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.3 =
+* Improved: when you create your account from the plugin, DonatoTomato can now show a one-click "Open WordPress settings" link to bring you straight back here to finish setup, instead of leaving you to find your way back manually.
 
 = 1.4.2 =
 * Improved: the setup field and prompts now consistently say "Organization ID" (the value you copy from your DonatoTomato dashboard), instead of a mix of "Organization ID" and "Organization Slug" — one less "are these the same thing?" moment when pasting it in.

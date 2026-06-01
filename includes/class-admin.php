@@ -17,6 +17,24 @@ class DonatoTomato_Admin {
     const PAGE_SLUG    = 'donatotomato';
     const OPTION_GROUP = 'donatotomato_settings';
 
+    /**
+     * App signup URL, tagged for the plugin hand-off:
+     *   - from=wp    so the funnel attributes plugin-originated signups.
+     *   - site=<wp-admin base> so the app can offer a one-click deep link back
+     *     to this site's plugin settings once the account is created.
+     *
+     * @return string
+     */
+    public static function signup_url() {
+        return add_query_arg(
+            array(
+                'from' => 'wp',
+                'site' => admin_url(),
+            ),
+            DONATOTOMATO_APP_URL . '/auth'
+        );
+    }
+
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
         add_action( 'admin_init', [ $this, 'register_settings' ] );
@@ -37,7 +55,7 @@ class DonatoTomato_Admin {
                 'defaultSlug'  => get_option( 'donatotomato_org_slug', '' ),
                 'appUrl'       => untrailingslashit( DONATOTOMATO_APP_URL ),
                 'settingsUrl'  => admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ),
-                'signupUrl'    => 'https://app.donatotomato.com/auth?from=wp',
+                'signupUrl'    => esc_url_raw( self::signup_url() ),
                 'campaignsUrl' => 'https://app.donatotomato.com/campaigns',
             ] ) . ';',
             'before'
@@ -91,7 +109,7 @@ class DonatoTomato_Admin {
                 'orgSlug'       => get_option( 'donatotomato_org_slug', '' ),
                 'savedCampaign' => get_option( 'donatotomato_floating_campaign', '' ),
                 'generalTabUrl' => esc_url( admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ) ),
-                'signupUrl'     => 'https://app.donatotomato.com/auth?from=wp',
+                'signupUrl'     => esc_url_raw( self::signup_url() ),
                 'campaignsUrl'  => 'https://app.donatotomato.com/campaigns',
                 'strings'       => $this->get_admin_strings(),
             ]
@@ -295,7 +313,7 @@ class DonatoTomato_Admin {
             printf(
                 /* translators: 1: create-account link, 2: campaigns dashboard link */
                 wp_kses_post( __( 'New to DonatoTomato? %1$s — it\'s free. Already have an account? Open any campaign in your %2$s and copy the Organization ID shown in its "Add to your website" panel, then paste it here. Used as the default Organization ID for all widgets on this site.', 'donatotomato' ) ),
-                '<a href="' . esc_url( 'https://app.donatotomato.com/auth?from=wp' ) . '" target="_blank" rel="noopener">' . esc_html__( 'Create a free account', 'donatotomato' ) . '</a>',
+                '<a href="' . esc_url( self::signup_url() ) . '" target="_blank" rel="noopener">' . esc_html__( 'Create a free account', 'donatotomato' ) . '</a>',
                 '<a href="' . esc_url( 'https://app.donatotomato.com/campaigns' ) . '" target="_blank" rel="noopener">' . esc_html__( 'DonatoTomato dashboard', 'donatotomato' ) . '</a>'
             );
             ?>
@@ -442,7 +460,7 @@ class DonatoTomato_Admin {
                         <?php esc_html_e( 'The floating Donate button needs your free DonatoTomato account. If you don\'t have one yet, create it (about 2 minutes) — then add your Organization ID in the General tab.', 'donatotomato' ); ?>
                     </p>
                     <p>
-                        <a href="<?php echo esc_url( 'https://app.donatotomato.com/auth?from=wp' ); ?>" class="button button-primary" target="_blank" rel="noopener">
+                        <a href="<?php echo esc_url( self::signup_url() ); ?>" class="button button-primary" target="_blank" rel="noopener">
                             <?php esc_html_e( 'Create a free account', 'donatotomato' ); ?>
                         </a>
                         <a href="<?php echo esc_url( admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ) ); ?>" class="button">
