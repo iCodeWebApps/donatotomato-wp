@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -108,9 +108,9 @@ With optional overrides:
 
 == Frequently Asked Questions ==
 
-= Where do I find my Organization Slug and Campaign ID? =
+= Where do I find my Organization ID? =
 
-Log in to your [DonatoTomato dashboard](https://app.donatotomato.com). The organization slug is in Settings → Embed Code. Campaign IDs are listed on your Campaigns page. The floating Donate button picker shows campaigns by name (you do not need to copy the ID manually).
+Don't have a DonatoTomato account yet? Create one free at [donatotomato.com](https://app.donatotomato.com/auth). Once you're in, open any campaign in your dashboard — your Organization ID is shown in the "Add to your website" panel, with a one-click Copy button. Paste it into Settings → DonatoTomato → General. The floating Donate button picker then lists your campaigns by name (no need to copy IDs manually).
 
 = Does the floating Donate button work on mobile? =
 
@@ -168,6 +168,10 @@ Payment processing is handled by Stripe via the DonatoTomato platform. Stripe's 
 4. Settings → DonatoTomato — position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.1 =
+* Improved: first-time setup is now account-aware. The Floating Donate Button tab leads with a "Create a free account" action for anyone who doesn't have a DonatoTomato account yet, instead of dead-ending at "Open General tab."
+* Fixed: the Organization ID help text pointed to a dashboard location that no longer exists. It now explains where to find your Organization ID (on any campaign's "Add to your website" panel) and offers free account creation.
 
 = 1.4.0 =
 * New: campaign picker dropdown in both block inspectors (Donation Widget block + Donate Button block) — pick a campaign from a list of names with status badges (Active / Draft / Paused) instead of pasting a UUID. Mirrors the floating-button picker UX.

@@ -293,9 +293,10 @@ class DonatoTomato_Admin {
         <p class="description">
             <?php
             printf(
-                /* translators: %s: link to DonatoTomato dashboard */
-                esc_html__( 'Found in your %s under Settings → Embed Code. Used as the default slug for all widgets on this site.', 'donatotomato' ),
-                '<a href="' . esc_url( 'https://app.donatotomato.com' ) . '" target="_blank">' . esc_html__( 'DonatoTomato dashboard', 'donatotomato' ) . '</a>'
+                /* translators: 1: create-account link, 2: campaigns dashboard link */
+                wp_kses_post( __( 'New to DonatoTomato? %1$s — it\'s free. Already have an account? Open any campaign in your %2$s and copy the Organization ID shown in its "Add to your website" panel, then paste it here. Used as the default slug for all widgets on this site.', 'donatotomato' ) ),
+                '<a href="' . esc_url( 'https://app.donatotomato.com/auth' ) . '" target="_blank" rel="noopener">' . esc_html__( 'Create a free account', 'donatotomato' ) . '</a>',
+                '<a href="' . esc_url( 'https://app.donatotomato.com/campaigns' ) . '" target="_blank" rel="noopener">' . esc_html__( 'DonatoTomato dashboard', 'donatotomato' ) . '</a>'
             );
             ?>
         </p>
@@ -409,12 +410,15 @@ class DonatoTomato_Admin {
             <?php if ( '' === $org_slug ) : ?>
                 <div class="notice notice-warning inline">
                     <p>
-                        <strong><?php esc_html_e( 'First, tell us who you are.', 'donatotomato' ); ?></strong>
-                        <?php esc_html_e( 'Set your Organization Slug in the General tab to enable the floating Donate button.', 'donatotomato' ); ?>
+                        <strong><?php esc_html_e( 'First, connect your DonatoTomato account.', 'donatotomato' ); ?></strong>
+                        <?php esc_html_e( 'The floating Donate button needs your free DonatoTomato account. If you don\'t have one yet, create it (about 2 minutes) — then add your Organization ID in the General tab.', 'donatotomato' ); ?>
                     </p>
                     <p>
-                        <a href="<?php echo esc_url( admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ) ); ?>" class="button button-primary">
-                            <?php esc_html_e( 'Open General tab', 'donatotomato' ); ?>
+                        <a href="<?php echo esc_url( 'https://app.donatotomato.com/auth' ); ?>" class="button button-primary" target="_blank" rel="noopener">
+                            <?php esc_html_e( 'Create a free account', 'donatotomato' ); ?>
+                        </a>
+                        <a href="<?php echo esc_url( admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ) ); ?>" class="button">
+                            <?php esc_html_e( 'I have an account — add my Organization ID', 'donatotomato' ); ?>
                         </a>
                     </p>
                 </div>
