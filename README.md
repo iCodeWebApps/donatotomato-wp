@@ -4,23 +4,27 @@
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/donatotomato.svg)](https://wordpress.org/plugins/donatotomato/)
 [![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/donatotomato.svg)](https://wordpress.org/plugins/donatotomato/)
 
-Embed a [DonatoTomato](https://donatotomato.com) donation widget on any WordPress page or post — via shortcode or Gutenberg block — or drop a Donate button into your nav that opens the donation form as a pop-up.
+Add donations to your WordPress site with a no-code site-wide floating Donate button, an inline [DonatoTomato](https://donatotomato.com) widget on any page or post (shortcode or Gutenberg block), or a Donate button that opens the donation form as a pop-up.
 
 Live in the WordPress Plugin Directory: **https://wordpress.org/plugins/donatotomato/**
 
 ## What is DonatoTomato?
 
-DonatoTomato is a donation platform built for US nonprofits. Accept one-time and recurring donations through a branded widget connected to your Stripe account. No monthly fee — just 1% per donation.
+DonatoTomato is a donation platform built for US nonprofits. Accept one-time and recurring donations through a branded widget connected to your own Stripe account, so your organization stays the merchant of record. No monthly fee and no setup fee — a flat 1% platform fee per donation, on top of Stripe's standard payment processing.
 
 ## Installation
 
 1. Install **DonatoTomato** from the WordPress plugin directory (Plugins → Add New → search "DonatoTomato"), or upload the plugin to `/wp-content/plugins/donatotomato/`.
 2. Activate the plugin through the **Plugins** menu.
-3. Go to **Settings → DonatoTomato** and enter your Organization Slug (found in your [DonatoTomato dashboard](https://app.donatotomato.com) under Settings → Embed Code).
+3. Go to **Settings → DonatoTomato** and enter your **Organization ID** (found in your [DonatoTomato dashboard](https://app.donatotomato.com) on any campaign's **Add to your website** panel).
 
 ## Usage
 
-The plugin ships two widget styles:
+The plugin offers three ways to add donations — start with the no-code floating button, or use a shortcode/block for in-page placement.
+
+### Floating Donate button (no code)
+
+Go to **Settings → DonatoTomato → Floating Donate Button**, pick a campaign, set the label, color, size, shape, and position, and enable it. A Donate button then appears site-wide and opens the donation form as a pop-up — no shortcode or block required.
 
 ### Inline widget (donation form embedded on a page)
 
