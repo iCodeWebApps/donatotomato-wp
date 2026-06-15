@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.4
+Stable tag: 1.4.5
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -183,6 +183,11 @@ With optional overrides:
 
 == Changelog ==
 
+= 1.4.5 =
+* Improved: uninstalling the plugin now removes all of its settings, the floating-button configuration, its activation-notice flag, and its cached data from the database, so deleting the plugin leaves nothing behind.
+* Hardened: the auto-resize listener now only accepts height messages from the DonatoTomato widget origin.
+* Accessibility: the embedded donation form iframe now has a descriptive title for screen readers.
+
 = 1.4.4 =
 * Improved: the "What does DonatoTomato cost?" answer now states the full cost honestly — a flat 1% platform fee on top of Stripe's standard payment processing — instead of mentioning only the 1%.
 * Improved: the description now leads with what the plugin does and surfaces recurring giving, donor self-service, tax-deductible receipts, and that donations go directly into your own Stripe account (your nonprofit is the merchant of record).
@@ -248,6 +253,9 @@ With optional overrides:
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.4.5 =
+Maintenance + hardening: full data cleanup on uninstall, the resize listener now verifies the message origin, and the embedded form iframe gains an accessible title. No changes to how donations work.
 
 = 1.4.4 =
 Documentation clarity update: the cost explanation now states the full fee (1% platform fee plus Stripe's standard processing), and the description surfaces recurring giving, donor self-service, tax-deductible receipts, and that donations go into your own Stripe account. No functional changes to the plugin.

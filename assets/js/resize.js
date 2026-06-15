@@ -1,7 +1,13 @@
 ( function () {
 	'use strict';
 
+	var DT_ORIGIN = 'https://app.donatotomato.com';
+
 	window.addEventListener( 'message', function ( event ) {
+		// Only accept resize messages from the DonatoTomato widget origin.
+		if ( event.origin !== DT_ORIGIN ) {
+			return;
+		}
 		if ( ! event.data || event.data.type !== 'dt-resize' ) {
 			return;
 		}
