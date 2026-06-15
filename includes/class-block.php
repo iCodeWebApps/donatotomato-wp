@@ -56,11 +56,12 @@ function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 6
 
     return sprintf(
         '<div class="donatotomato-wrapper" style="max-width:%dpx;">' .
-        '<iframe src="%s" width="%d" height="%d" frameborder="0" allow="payment" loading="lazy"></iframe>' .
+        '<iframe src="%s" width="%d" height="%d" title="%s" frameborder="0" allow="payment" loading="lazy"></iframe>' .
         '</div>',
         $width,
         $src,
         $width,
-        $height
+        $height,
+        esc_attr__( 'Donation form', 'donatotomato' )
     );
 }
