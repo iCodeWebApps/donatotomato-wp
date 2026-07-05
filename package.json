@@ -1,6 +1,6 @@
 {
     "name": "donatotomato",
-    "version": "1.4.5",
+    "version": "1.4.6",
     "description": "DonatoTomato donation widget for WordPress",
     "scripts": {
         "build": "wp-scripts build",
