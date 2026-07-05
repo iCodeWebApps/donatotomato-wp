@@ -1,9 +1,9 @@
-=== DonatoTomato ===
+=== DonatoTomato - Nonprofit Donation Forms, Recurring Giving & Tax Receipts ===
 Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -41,6 +41,14 @@ This plugin is open source (GPL-2.0-or-later) with full, unminified source publi
 * Donations go directly into your own connected Stripe account — your nonprofit is the merchant of record, and DonatoTomato never holds your money
 * Branded with your nonprofit's logo and colors
 * No transaction data stored on your WordPress site — all payments handled securely by Stripe
+
+**Built into your connected DonatoTomato account:**
+
+Beyond the on-site form, the free DonatoTomato account this plugin connects to includes the back office for running donations:
+
+* Donor management (CRM): donor profiles, lifetime giving totals, active and lapsed donor segmentation, notes, and CSV import of your existing donor history.
+* Fundraising accounting: a reporting dashboard that reconciles gross raised, the 1% platform fee, actual Stripe processing fees, and your true net, with CSV export.
+* Year-end tax statements: consolidated annual giving statements for each donor, with your EIN and the IRS acknowledgment language, ready to email or print.
 
 **How it works:**
 
@@ -183,6 +191,9 @@ With optional overrides:
 
 == Changelog ==
 
+= 1.4.6 =
+* Improved: the plugin listing now leads with what it is (nonprofit donation forms with recurring giving and tax receipts) and the description surfaces the donor management, fundraising accounting, and year-end tax statements included in your connected DonatoTomato account. Listing copy only; no functional changes.
+
 = 1.4.5 =
 * Improved: uninstalling the plugin now removes all of its settings, the floating-button configuration, its activation-notice flag, and its cached data from the database, so deleting the plugin leaves nothing behind.
 * Hardened: the auto-resize listener now only accepts height messages from the DonatoTomato widget origin.
@@ -253,6 +264,9 @@ With optional overrides:
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.4.6 =
+Listing clarity update: the title and description now surface the donor management, accounting, and year-end tax statements included with your DonatoTomato account. No functional changes to the plugin.
 
 = 1.4.5 =
 Maintenance + hardening: full data cleanup on uninstall, the resize listener now verifies the message origin, and the embedded form iframe gains an accessible title. No changes to how donations work.
