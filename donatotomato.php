@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'DONATOTOMATO_VERSION', '1.4.5' );
+define( 'DONATOTOMATO_VERSION', '1.4.6' );
 define( 'DONATOTOMATO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DONATOTOMATO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'DONATOTOMATO_APP_URL', 'https://app.donatotomato.com' );
