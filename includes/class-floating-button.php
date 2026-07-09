@@ -229,7 +229,8 @@ class DonatoTomato_Floating_Button {
         $css .= 'text-decoration:none;font-family:inherit;}';
         $css .= '.dt-floating-donate:hover,.dt-floating-donate:focus{transform:scale(1.05);color:' . $text_color . ';}';
         $css .= '.dt-floating-donate:focus-visible{outline:2px solid ' . $color . ';outline-offset:3px;}';
-        $css .= '.dt-floating-donate__heart{font-size:1.05em;line-height:1;}';
+        $css .= '.dt-floating-donate__heart{display:inline-flex;line-height:0;}';
+        $css .= '.dt-floating-donate__heart svg{width:1.05em;height:1.05em;display:block;}';
         $css .= '@media (max-width:640px){.dt-floating-donate{';
         $css .= $position_css_mobile;
         $css .= 'padding:12px 22px;font-size:14px;}}';
@@ -250,7 +251,7 @@ class DonatoTomato_Floating_Button {
             '<button type="button" class="dt-floating-donate" data-dt-donate="%1$s" aria-label="%2$s">%3$s<span class="dt-floating-donate__label">%4$s</span></button>',
             esc_attr( $campaign ),
             esc_attr( $aria ),
-            $show_heart ? '<span class="dt-floating-donate__heart" aria-hidden="true">&#9829;</span>' : '',
+            $show_heart ? '<span class="dt-floating-donate__heart" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></span>' : '',
             esc_html( $label )
         );
     }
