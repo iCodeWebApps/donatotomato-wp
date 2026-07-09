@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.6
+Stable tag: 1.4.7
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -190,6 +190,9 @@ With optional overrides:
 4. Settings → DonatoTomato — position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.7 =
+* Improved: the optional heart on the floating Donate button now uses the same crisp icon as the donation form, for a more polished, consistent look.
 
 = 1.4.6 =
 * Improved: the plugin listing now leads with what it is (nonprofit donation forms with recurring giving and tax receipts) and the description surfaces the donor management, fundraising accounting, and year-end tax statements included in your connected DonatoTomato account. Listing copy only; no functional changes.
