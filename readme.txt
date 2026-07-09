@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.7
+Stable tag: 1.4.8
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -186,10 +186,13 @@ With optional overrides:
 
 1. One-click floating Donate button — appears on every page automatically once enabled.
 2. The donation modal opens when the floating button is clicked — same focal-modal pop-up donors see from the Donate Button block.
-3. Settings → DonatoTomato — pick a campaign from the live-populated dropdown, set label and styling.
-4. Settings → DonatoTomato — position, visibility rules, and live preview of the button.
+3. DonatoTomato settings — pick a campaign from the live-populated dropdown, set label and styling.
+4. DonatoTomato settings — position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.8 =
+* Fixed: the captions under the third and fourth screenshots on the plugin listing now display correctly. Listing copy only; no functional changes.
 
 = 1.4.7 =
 * Improved: the optional heart on the floating Donate button now uses the same crisp icon as the donation form, for a more polished, consistent look.
