@@ -60,6 +60,9 @@ class DonatoTomato_Block {
  * absent, which must stay falsy. `[donatotomato choose]` therefore falls through
  * to the shortcode's "add a campaign, or choose=yes" error, which tells the
  * author exactly what to write. Verified against WP 6.9 in the Test Lab.
+ *
+ * @param mixed $value Raw shortcode attribute value.
+ * @return bool Whether the attribute reads as an explicit yes.
  */
 function donatotomato_is_truthy_att( $value ) {
     if ( is_bool( $value ) ) {
@@ -77,6 +80,12 @@ function donatotomato_is_truthy_att( $value ) {
  * per missionary, program or fund use that so one embed covers every fund
  * instead of one embed per fund. Callers are responsible for deciding that an
  * empty campaign was intended — the shortcodes require an explicit choose="yes".
+ *
+ * @param string $slug     Organization slug.
+ * @param string $campaign Campaign ID, or '' to let the donor choose.
+ * @param int    $width    Iframe width in pixels.
+ * @param int    $height   Iframe height in pixels.
+ * @return string Iframe markup.
  */
 function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 600 ) {
     $path = '/widget/' . rawurlencode( $slug );
