@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.8
+Stable tag: 1.4.9
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -190,6 +190,13 @@ With optional overrides:
 4. DonatoTomato settings: position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.9 =
+* New: Shortcode Builder tab under Settings > DonatoTomato. Pick a campaign by name and copy a ready-to-paste shortcode, with no campaign IDs to look up by hand.
+* Built for page builders. Divi, Elementor and similar editors replace the WordPress block editor, so the DonatoTomato blocks are not available inside them. The builder covers that path, and tells you where to paste in each editor.
+* Supports both the inline donation form and the donate button, with optional width, height and button label.
+* Includes a manual campaign ID fallback for sites where the campaign list cannot load.
+* Fix: the floating Donate button tab no longer requests the campaign list while you are on the General tab.
 
 = 1.4.8 =
 * Fixed: the captions under the third and fourth screenshots on the plugin listing now display correctly. Listing copy only; no functional changes.
