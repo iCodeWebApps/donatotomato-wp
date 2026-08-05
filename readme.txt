@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.9
+Stable tag: 1.4.10
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -180,6 +180,18 @@ With optional overrides:
 
 **Gutenberg Block:** Search for "DonatoTomato Donate Button" in the block inserter (under Embeds). Enter your Campaign ID and optional label.
 
+= Let donors choose the destination (new in 1.4.10) =
+
+If you raise money for several things at once, one missionary or program or project per fund, you do not need a separate embed for each. Add `choose="yes"` instead of a campaign ID and the donation form opens on a list of your active campaigns, so the donor picks where their gift goes:
+
+`[donatotomato choose="yes"]`
+
+`[donatotomato_button choose="yes" label="Give to a worker"]`
+
+The Shortcode Builder has a checkbox for this, so you do not have to type it by hand. Campaigns appear in the list as soon as they are Active, and drop off when you pause or end them.
+
+If your organization only has one active campaign, the donor goes straight to it and never sees a list.
+
 **Adding to your nav menu:** Most themes support adding a Custom Link or Custom HTML to the menu. Use the shortcode in a Custom HTML block, or paste the rendered HTML directly: `<button type="button" class="donatotomato-button" data-dt-donate="your-campaign-id">Donate</button>` (works only after the plugin is active so the supporting script is loaded).
 
 == Screenshots ==
@@ -190,6 +202,12 @@ With optional overrides:
 4. DonatoTomato settings: position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.10 =
+* New: let donors choose the destination. Add choose="yes" to either shortcode and the form opens on a list of your active campaigns, so one embed covers every fund. Built for organizations that give per missionary, program or project.
+* The Shortcode Builder has a checkbox for it, so there is nothing to type by hand.
+* If your organization has only one active campaign, the donor goes straight to it and never sees a list.
+* Existing shortcodes are unchanged. A campaign ID still embeds that one campaign exactly as before.
 
 = 1.4.9 =
 * New: Shortcode Builder tab under Settings > DonatoTomato. Pick a campaign by name and copy a ready-to-paste shortcode, with no campaign IDs to look up by hand.
