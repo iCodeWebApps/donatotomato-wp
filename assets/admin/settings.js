@@ -310,8 +310,12 @@
     }
 
     function composeShortcode() {
-        var campaign = builderCampaign();
-        if ( ! campaign ) {
+        // "Let donors choose" replaces the campaign entirely: the form opens on
+        // a list of the org's active campaigns. No campaign is needed, and the
+        // picker section of the UI is hidden while it is on.
+        var choose   = $( '.donatotomato-builder-choose' ).is( ':checked' );
+        var campaign = choose ? '' : builderCampaign();
+        if ( ! choose && ! campaign ) {
             $bOutput.val( '' );
             $bCopy.prop( 'disabled', true );
             return;
@@ -319,14 +323,18 @@
 
         var shortcode;
         if ( 'button' === builderType() ) {
-            shortcode = '[donatotomato_button campaign="' + campaign + '"';
+            shortcode = choose
+                ? '[donatotomato_button choose="yes"'
+                : '[donatotomato_button campaign="' + campaign + '"';
             var label = cleanAttr( $( '.donatotomato-builder-label' ).val() );
             if ( label ) {
                 shortcode += ' label="' + label + '"';
             }
             shortcode += ']';
         } else {
-            shortcode = '[donatotomato campaign="' + campaign + '"';
+            shortcode = choose
+                ? '[donatotomato choose="yes"'
+                : '[donatotomato campaign="' + campaign + '"';
             var width  = parseInt( $( '.donatotomato-builder-width' ).val(), 10 );
             var height = parseInt( $( '.donatotomato-builder-height' ).val(), 10 );
             // Only emit size attributes when they differ from the shortcode's
@@ -349,6 +357,11 @@
         $( '.donatotomato-builder-row--inline' ).toggle( 'inline' === type );
         $( '.donatotomato-builder-row--button' ).toggle( 'button' === type );
         $bTypeHelp.text( $bTypeHelp.attr( 'button' === type ? 'data-button' : 'data-inline' ) || '' );
+        // Picking a single campaign is meaningless while the donor is choosing,
+        // so hide that whole section rather than leave a control that does
+        // nothing. Width/height and label still apply and stay visible.
+        $( '.donatotomato-builder-campaign-section' )
+            .toggle( ! $( '.donatotomato-builder-choose' ).is( ':checked' ) );
     }
 
     function renderBuilderCampaigns( response ) {
@@ -472,6 +485,11 @@
             if ( manual && ! UUID_PATTERN.test( manual ) ) {
                 $bManualWarning.addClass( 'is-warning' ).text( s.malformedId );
             }
+            composeShortcode();
+        } );
+
+        $( document ).on( 'change', '.donatotomato-builder-choose', function () {
+            syncBuilderRows();
             composeShortcode();
         } );
 

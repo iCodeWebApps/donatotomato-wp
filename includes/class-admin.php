@@ -836,6 +836,19 @@ class DonatoTomato_Admin {
                 </section>
 
                 <section class="donatotomato-section">
+                    <h2><?php esc_html_e( 'Where the money goes', 'donatotomato' ); ?></h2>
+                    <p class="donatotomato-builder-choose-wrap">
+                        <label>
+                            <input type="checkbox" class="donatotomato-builder-choose" />
+                            <strong><?php esc_html_e( 'Let donors choose the destination', 'donatotomato' ); ?></strong>
+                        </label>
+                        <span class="description">
+                            <?php esc_html_e( 'The form opens on a list of your active campaigns, so one embed covers every fund. Use this if you give per missionary, program, or project. Leave it off to embed a single campaign.', 'donatotomato' ); ?>
+                        </span>
+                    </p>
+                </section>
+
+                <section class="donatotomato-section donatotomato-builder-campaign-section">
                     <h2><?php esc_html_e( 'Campaign', 'donatotomato' ); ?></h2>
                     <div class="donatotomato-campaign-picker">
                         <select class="donatotomato-builder-select">

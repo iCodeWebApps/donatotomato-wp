@@ -25,6 +25,7 @@ class DonatoTomato_Button_Shortcode {
         $atts = shortcode_atts( [
             'slug'     => '', // Override the global org slug for this button.
             'campaign' => '',
+            'choose'   => '',
             'label'    => __( 'Donate', 'donatotomato' ),
             'class'    => '',
         ], $atts, 'donatotomato_button' );
@@ -33,14 +34,23 @@ class DonatoTomato_Button_Shortcode {
         $campaign = sanitize_text_field( $atts['campaign'] );
         $label    = sanitize_text_field( $atts['label'] );
 
+        // See class-shortcode.php: explicit opt-in, because an empty campaign
+        // has always been a reportable mistake. embed.js treats a PRESENT but
+        // empty data-dt-donate as "open the destination picker".
+        $choose = donatotomato_is_truthy_att( $atts['choose'] );
+
         // sanitize_html_class() collapses spaces, so a multi-class string like
         // "btn-primary large" would be mangled. Split → sanitize each → rejoin
         // so customers can pass multiple CSS classes for theme integration.
         $class_parts = array_filter( array_map( 'sanitize_html_class', explode( ' ', $atts['class'] ) ) );
         $class       = implode( ' ', $class_parts );
 
-        if ( '' === $campaign ) {
-            return '<p style="color:#b91c1c;">' . esc_html__( 'DonatoTomato button: campaign attribute is required.', 'donatotomato' ) . '</p>';
+        if ( ! $choose && '' === $campaign ) {
+            return '<p style="color:#b91c1c;">' . esc_html__( 'DonatoTomato button: add a campaign attribute, or choose="yes" to let donors pick a destination.', 'donatotomato' ) . '</p>';
+        }
+
+        if ( $choose ) {
+            $campaign = '';
         }
 
         // Need a tenant somewhere — either per-button override or the global
