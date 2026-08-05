@@ -57,7 +57,12 @@ class DonatoTomato_Shortcode {
             ) . '</p>';
         }
 
-        if ( ! $choose && '' === $campaign ) {
+        // empty() rather than '' === so campaign="0" keeps erroring exactly as
+        // it did before choose existed. '0' is never a valid campaign (IDs are
+        // UUIDs), so the only thing at stake is which failure the author sees,
+        // and changing that is not this PR's job. The button shortcode has
+        // always used '' === here; that divergence predates this change.
+        if ( ! $choose && empty( $campaign ) ) {
             return '<p style="color:#b91c1c;">' . esc_html__( 'DonatoTomato: add a campaign attribute, or choose="yes" to let donors pick a destination.', 'donatotomato' ) . '</p>';
         }
 
