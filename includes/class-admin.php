@@ -1,9 +1,12 @@
 <?php
 /**
- * Admin settings page for DonatoTomato. Two tabs:
+ * Admin settings page for DonatoTomato. Three tabs:
  *   - General: Organization ID + usage docs.
  *   - Floating Donate Button: enable, campaign picker, style, placement,
  *     visibility, live preview.
+ *   - Shortcode Builder: pick a campaign by name and copy a ready-to-paste
+ *     shortcode — the no-Gutenberg path for Divi, Elementor, and other page
+ *     builders where the plugin's blocks aren't available.
  *
  * @package DonatoTomato
  */
@@ -137,6 +140,12 @@ class DonatoTomato_Admin {
             'statusPaused'        => __( 'Paused', 'donatotomato' ),
             'preview'             => __( 'Live preview', 'donatotomato' ),
             'donateDefault'       => __( 'Donate', 'donatotomato' ),
+            'missingSlugBuilder'  => __( 'Set your Organization ID in the General tab to use the shortcode builder.', 'donatotomato' ),
+            'copyShortcode'       => __( 'Copy shortcode', 'donatotomato' ),
+            'copied'              => __( 'Copied!', 'donatotomato' ),
+            'copyManually'        => __( 'Copy failed — select the shortcode text and press Ctrl+C / Cmd+C.', 'donatotomato' ),
+            'builderPickFirst'    => __( 'Pick a campaign above to generate your shortcode.', 'donatotomato' ),
+            'malformedId'         => __( 'Campaign ID looks malformed. It should be a UUID like 1234abcd-5678-90ef-1234-567890abcdef.', 'donatotomato' ),
         ];
     }
 
@@ -330,7 +339,7 @@ class DonatoTomato_Admin {
         }
 
         $active_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- tab nav is a read-only navigation parameter, not a state change.
-        if ( ! in_array( $active_tab, [ 'general', 'floating' ], true ) ) {
+        if ( ! in_array( $active_tab, [ 'general', 'floating', 'builder' ], true ) ) {
             $active_tab = 'general';
         }
 
@@ -348,11 +357,17 @@ class DonatoTomato_Admin {
                    class="nav-tab <?php echo 'floating' === $active_tab ? 'nav-tab-active' : ''; ?>">
                     <?php esc_html_e( 'Floating Donate Button', 'donatotomato' ); ?>
                 </a>
+                <a href="<?php echo esc_url( add_query_arg( 'tab', 'builder', $base_url ) ); ?>"
+                   class="nav-tab <?php echo 'builder' === $active_tab ? 'nav-tab-active' : ''; ?>">
+                    <?php esc_html_e( 'Shortcode Builder', 'donatotomato' ); ?>
+                </a>
             </h2>
 
             <?php
             if ( 'general' === $active_tab ) {
                 $this->render_tab_general();
+            } elseif ( 'builder' === $active_tab ) {
+                $this->render_tab_builder();
             } else {
                 $this->render_tab_floating();
             }
@@ -383,6 +398,16 @@ class DonatoTomato_Admin {
 
         <details class="donatotomato-advanced-usage">
             <summary><?php esc_html_e( 'Advanced / for developers — shortcodes & blocks', 'donatotomato' ); ?></summary>
+
+            <p>
+                <?php
+                printf(
+                    /* translators: %s: link to the Shortcode Builder tab */
+                    esc_html__( 'Tip: you don\'t have to write these by hand — the %s picks a campaign by name and generates a ready-to-paste shortcode.', 'donatotomato' ),
+                    '<a href="' . esc_url( add_query_arg( 'tab', 'builder', admin_url( 'options-general.php?page=' . self::PAGE_SLUG ) ) ) . '">' . esc_html__( 'Shortcode Builder', 'donatotomato' ) . '</a>'
+                );
+                ?>
+            </p>
 
             <h3><?php esc_html_e( 'Inline widget', 'donatotomato' ); ?></h3>
             <p><?php esc_html_e( 'Embeds the donation form directly on the page.', 'donatotomato' ); ?></p>
@@ -752,6 +777,164 @@ class DonatoTomato_Admin {
 
                 <?php submit_button( __( 'Save Settings', 'donatotomato' ) ); ?>
             </form>
+        </div>
+        <?php
+    }
+
+    /**
+     * Shortcode Builder tab. Pure client-side generator — nothing here is
+     * saved to the database; the campaign list comes from the same admin-only
+     * REST proxy the Floating Donate Button tab uses, and the assembled
+     * shortcode is copied to the clipboard by assets/admin/settings.js.
+     *
+     * Exists for page builders: Divi, Elementor, and friends replace the
+     * block editor, so the plugin's Gutenberg blocks (and their campaign
+     * picker) are unreachable there. This tab gives those users the same
+     * pick-by-name experience and hands them a finished shortcode to paste
+     * into the builder's Code/Shortcode module.
+     */
+    private function render_tab_builder() {
+        $org_slug = (string) get_option( 'donatotomato_org_slug', '' );
+        ?>
+        <div class="donatotomato-builder-tab" data-org-slug="<?php echo esc_attr( $org_slug ); ?>">
+
+            <p class="donatotomato-builder-intro">
+                <?php esc_html_e( 'Using Divi, Elementor, or another page builder? Those editors replace the WordPress block editor, so the DonatoTomato blocks aren\'t available inside them. Build your shortcode here instead — pick a campaign by name, copy the result, and paste it into your builder.', 'donatotomato' ); ?>
+            </p>
+
+            <?php if ( '' === $org_slug ) : ?>
+                <div class="notice notice-warning inline">
+                    <p>
+                        <strong><?php esc_html_e( 'First, connect your DonatoTomato account.', 'donatotomato' ); ?></strong>
+                        <?php esc_html_e( 'The shortcode builder needs your free DonatoTomato account. If you don\'t have one yet, create it (about 2 minutes) — then add your Organization ID in the General tab.', 'donatotomato' ); ?>
+                    </p>
+                    <p>
+                        <a href="<?php echo esc_url( self::signup_url() ); ?>" class="button button-primary" target="_blank" rel="noopener">
+                            <?php esc_html_e( 'Create a free account', 'donatotomato' ); ?>
+                        </a>
+                        <a href="<?php echo esc_url( admin_url( 'options-general.php?page=' . self::PAGE_SLUG . '&tab=general' ) ); ?>" class="button">
+                            <?php esc_html_e( 'I have an account — add my Organization ID', 'donatotomato' ); ?>
+                        </a>
+                    </p>
+                </div>
+            <?php endif; ?>
+
+            <fieldset class="donatotomato-fieldset" <?php echo '' === $org_slug ? 'disabled="disabled"' : ''; ?>>
+
+                <section class="donatotomato-section">
+                    <h2><?php esc_html_e( 'What are you adding?', 'donatotomato' ); ?></h2>
+                    <?php
+                    $type_options = [
+                        'inline' => __( 'Inline donation form', 'donatotomato' ),
+                        'button' => __( 'Donate button (pop-up)', 'donatotomato' ),
+                    ];
+                    $this->render_segmented( 'donatotomato_builder_type', $type_options, 'inline' );
+                    ?>
+                    <p class="description donatotomato-builder-type-help" data-inline="<?php esc_attr_e( 'Embeds the full donation form directly on the page — best for a dedicated Donate page.', 'donatotomato' ); ?>" data-button="<?php esc_attr_e( 'Adds a Donate button that opens the donation form in a pop-up over the page — great for heroes and CTAs.', 'donatotomato' ); ?>">
+                        <?php esc_html_e( 'Embeds the full donation form directly on the page — best for a dedicated Donate page.', 'donatotomato' ); ?>
+                    </p>
+                </section>
+
+                <section class="donatotomato-section">
+                    <h2><?php esc_html_e( 'Campaign', 'donatotomato' ); ?></h2>
+                    <div class="donatotomato-campaign-picker">
+                        <select class="donatotomato-builder-select">
+                            <option value=""><?php esc_html_e( 'Loading campaigns…', 'donatotomato' ); ?></option>
+                        </select>
+                        <button type="button" class="button donatotomato-builder-refresh">
+                            <?php esc_html_e( 'Refresh', 'donatotomato' ); ?>
+                        </button>
+                    </div>
+                    <p class="donatotomato-picker-status donatotomato-builder-status" role="status" aria-live="polite"></p>
+
+                    <details class="donatotomato-advanced donatotomato-builder-manual-wrap">
+                        <summary><?php esc_html_e( 'Or paste a campaign ID manually', 'donatotomato' ); ?></summary>
+                        <p>
+                            <input type="text"
+                                   class="regular-text code donatotomato-builder-manual"
+                                   placeholder="1234abcd-5678-90ef-1234-567890abcdef" />
+                        </p>
+                        <p class="description">
+                            <?php esc_html_e( 'Found on the Campaign Detail page in your DonatoTomato dashboard. When filled in, this overrides the dropdown above.', 'donatotomato' ); ?>
+                        </p>
+                        <p class="donatotomato-picker-status donatotomato-builder-manual-warning" role="status" aria-live="polite"></p>
+                    </details>
+                </section>
+
+                <section class="donatotomato-section">
+                    <h2><?php esc_html_e( 'Options', 'donatotomato' ); ?></h2>
+                    <table class="form-table" role="presentation">
+                        <tr class="donatotomato-builder-row donatotomato-builder-row--inline">
+                            <th scope="row">
+                                <label for="donatotomato_builder_width"><?php esc_html_e( 'Width (px)', 'donatotomato' ); ?></label>
+                            </th>
+                            <td>
+                                <input type="number"
+                                       id="donatotomato_builder_width"
+                                       class="small-text donatotomato-builder-width"
+                                       value="480"
+                                       min="300"
+                                       max="1200"
+                                       step="10" />
+                                <p class="description"><?php esc_html_e( 'Maximum width of the form. Default 480.', 'donatotomato' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr class="donatotomato-builder-row donatotomato-builder-row--inline">
+                            <th scope="row">
+                                <label for="donatotomato_builder_height"><?php esc_html_e( 'Height (px)', 'donatotomato' ); ?></label>
+                            </th>
+                            <td>
+                                <input type="number"
+                                       id="donatotomato_builder_height"
+                                       class="small-text donatotomato-builder-height"
+                                       value="600"
+                                       min="400"
+                                       max="1200"
+                                       step="10" />
+                                <p class="description"><?php esc_html_e( 'Initial height. The form auto-resizes to fit its content after it loads. Default 600.', 'donatotomato' ); ?></p>
+                            </td>
+                        </tr>
+                        <tr class="donatotomato-builder-row donatotomato-builder-row--button" style="display:none;">
+                            <th scope="row">
+                                <label for="donatotomato_builder_label"><?php esc_html_e( 'Button label', 'donatotomato' ); ?></label>
+                            </th>
+                            <td>
+                                <input type="text"
+                                       id="donatotomato_builder_label"
+                                       class="regular-text donatotomato-builder-label"
+                                       maxlength="30"
+                                       placeholder="<?php esc_attr_e( 'Donate', 'donatotomato' ); ?>" />
+                                <p class="description"><?php esc_html_e( 'The text donors see on the button. Leave empty for "Donate".', 'donatotomato' ); ?></p>
+                            </td>
+                        </tr>
+                    </table>
+                </section>
+
+                <section class="donatotomato-section">
+                    <h2><?php esc_html_e( 'Your shortcode', 'donatotomato' ); ?></h2>
+                    <div class="donatotomato-builder-output-row">
+                        <input type="text"
+                               readonly
+                               class="large-text code donatotomato-builder-output"
+                               value=""
+                               placeholder="<?php esc_attr_e( 'Pick a campaign above to generate your shortcode.', 'donatotomato' ); ?>"
+                               aria-label="<?php esc_attr_e( 'Generated shortcode', 'donatotomato' ); ?>" />
+                        <button type="button" class="button button-primary donatotomato-builder-copy" disabled="disabled">
+                            <?php esc_html_e( 'Copy shortcode', 'donatotomato' ); ?>
+                        </button>
+                    </div>
+                    <p class="donatotomato-picker-status donatotomato-builder-copy-status" role="status" aria-live="polite"></p>
+
+                    <h3><?php esc_html_e( 'Where to paste it', 'donatotomato' ); ?></h3>
+                    <ul class="donatotomato-builder-where">
+                        <li><strong><?php esc_html_e( 'Divi:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'add a Code module (or a Text module) where you want the donation form and paste the shortcode inside.', 'donatotomato' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Elementor:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'add a Shortcode widget (or an HTML widget) and paste the shortcode into it.', 'donatotomato' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Block editor:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'you don\'t need a shortcode — use the DonatoTomato blocks from the inserter. (A Shortcode block works too.)', 'donatotomato' ); ?></li>
+                        <li><strong><?php esc_html_e( 'Classic editor / widgets:', 'donatotomato' ); ?></strong> <?php esc_html_e( 'paste the shortcode directly into the content.', 'donatotomato' ); ?></li>
+                    </ul>
+                </section>
+
+            </fieldset>
         </div>
         <?php
     }

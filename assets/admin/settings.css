@@ -1,4 +1,4 @@
-/* DonatoTomato — admin settings page (Floating Donate Button tab). */
+/* DonatoTomato — admin settings page (Floating Donate Button + Shortcode Builder tabs). */
 
 .donatotomato-settings .nav-tab-wrapper {
     margin-bottom: 1.25rem;
@@ -190,4 +190,36 @@
 }
 .donatotomato-preview-button.has-heart .donatotomato-preview-button__heart {
     display: inline;
+}
+
+/* Shortcode builder */
+.donatotomato-builder-intro {
+    max-width: 640px;
+    font-size: 14px;
+}
+.donatotomato-builder-manual-wrap {
+    margin-top: 10px;
+}
+.donatotomato-builder-output-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    max-width: 680px;
+}
+.donatotomato-builder-output-row .donatotomato-builder-output {
+    flex: 1;
+    font-family: Consolas, Monaco, monospace;
+    background: #f6f7f7;
+}
+.donatotomato-builder-output-row .donatotomato-builder-copy {
+    flex-shrink: 0;
+}
+.donatotomato-builder-where {
+    max-width: 640px;
+    margin: 0.5rem 0 0.75rem;
+    list-style: disc;
+    padding-left: 1.25rem;
+}
+.donatotomato-builder-where li {
+    margin-bottom: 6px;
 }
