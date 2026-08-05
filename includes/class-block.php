@@ -49,10 +49,41 @@ class DonatoTomato_Block {
     }
 }
 
+/**
+ * Shortcode attributes are strings, and people write booleans a dozen ways.
+ * Accept the forms a nonprofit admin plausibly types: choose="yes", "true",
+ * "1", "on".
+ *
+ * A BARE attribute (`[donatotomato choose]`) is deliberately NOT truthy. WordPress
+ * parses bare words into numerically-indexed atts, so `choose` never arrives
+ * under its own key — it is indistinguishable here from the attribute being
+ * absent, which must stay falsy. `[donatotomato choose]` therefore falls through
+ * to the shortcode's "add a campaign, or choose=yes" error, which tells the
+ * author exactly what to write. Verified against WP 6.9 in the Test Lab.
+ */
+function donatotomato_is_truthy_att( $value ) {
+    if ( is_bool( $value ) ) {
+        return $value;
+    }
+    $v = strtolower( trim( (string) $value ) );
+    return in_array( $v, [ 'yes', 'true', '1', 'on' ], true );
+}
+
+/**
+ * Render the donation iframe.
+ *
+ * An EMPTY $campaign is meaningful, not missing: it points at the campaign-less
+ * widget route, which lets the donor choose a destination first. Orgs that give
+ * per missionary, program or fund use that so one embed covers every fund
+ * instead of one embed per fund. Callers are responsible for deciding that an
+ * empty campaign was intended — the shortcodes require an explicit choose="yes".
+ */
 function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 600 ) {
-    $src = esc_url(
-        DONATOTOMATO_APP_URL . '/widget/' . rawurlencode( $slug ) . '/' . rawurlencode( $campaign ) . '?source=wordpress'
-    );
+    $path = '/widget/' . rawurlencode( $slug );
+    if ( '' !== $campaign ) {
+        $path .= '/' . rawurlencode( $campaign );
+    }
+    $src = esc_url( DONATOTOMATO_APP_URL . $path . '?source=wordpress' );
 
     return sprintf(
         '<div class="donatotomato-wrapper" style="max-width:%dpx;">' .
