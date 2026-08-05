@@ -88,10 +88,50 @@
         return tmpl.replace( '%s', escapeHtml( value ) );
     }
 
+    // Shared GET against the plugin's admin-only REST proxy. Used by both the
+    // Floating Donate Button picker and the Shortcode Builder picker.
+    function requestCampaigns( refresh ) {
+        var url = donatotomatoAdmin.restRoot + '/campaigns';
+        if ( refresh ) {
+            url += '?refresh=1';
+        }
+        return $.ajax( {
+            url: url,
+            method: 'GET',
+            beforeSend: function ( xhr ) {
+                xhr.setRequestHeader( 'X-WP-Nonce', donatotomatoAdmin.nonce );
+            },
+        } );
+    }
+
+    function missingSlugMessage() {
+        return s.missingSlug + ' <a href="' + escapeHtml( donatotomatoAdmin.generalTabUrl ) + '">' + escapeHtml( s.missingSlugCta ) + '</a>';
+    }
+
+    function noCampaignsMessage() {
+        return format( s.noCampaigns, donatotomatoAdmin.orgSlug ) +
+            ' <a href="' + escapeHtml( donatotomatoAdmin.campaignsUrl ) + '" target="_blank" rel="noopener">' + escapeHtml( s.noCampaignsCta ) + '</a>';
+    }
+
+    function pickerFailureMessage( jqXHR ) {
+        var resp = jqXHR.responseJSON;
+        if ( resp && 'tenant_not_found' === resp.error ) {
+            return {
+                html: format( s.tenantNotFound, donatotomatoAdmin.orgSlug ) +
+                    ' <a href="' + escapeHtml( donatotomatoAdmin.signupUrl ) + '" target="_blank" rel="noopener">' + escapeHtml( s.tenantNotFoundCta ) + '</a>',
+                level: 'error',
+            };
+        }
+        if ( resp && 'missing_slug' === resp.error ) {
+            return { html: s.missingSlug, level: 'warning' };
+        }
+        return { html: s.upstreamError, level: 'error' };
+    }
+
     function loadCampaigns( opts ) {
         opts = opts || {};
         if ( ! hasSlug ) {
-            setStatus( s.missingSlug + ' <a href="' + escapeHtml( donatotomatoAdmin.generalTabUrl ) + '">' + escapeHtml( s.missingSlugCta ) + '</a>', 'warning' );
+            setStatus( missingSlugMessage(), 'warning' );
             $select.prop( 'disabled', true );
             return;
         }
@@ -99,32 +139,11 @@
         setStatus( opts.refresh ? s.refreshing : s.loading );
         $select.prop( 'disabled', true );
 
-        var url = donatotomatoAdmin.restRoot + '/campaigns';
-        if ( opts.refresh ) {
-            url += '?refresh=1';
-        }
-
-        $.ajax( {
-            url: url,
-            method: 'GET',
-            beforeSend: function ( xhr ) {
-                xhr.setRequestHeader( 'X-WP-Nonce', donatotomatoAdmin.nonce );
-            },
-        } ).done( function ( response ) {
+        requestCampaigns( opts.refresh ).done( function ( response ) {
             renderCampaigns( response );
         } ).fail( function ( jqXHR ) {
-            var resp = jqXHR.responseJSON;
-            if ( resp && 'tenant_not_found' === resp.error ) {
-                setStatus(
-                    format( s.tenantNotFound, donatotomatoAdmin.orgSlug ) +
-                        ' <a href="' + escapeHtml( donatotomatoAdmin.signupUrl ) + '" target="_blank" rel="noopener">' + escapeHtml( s.tenantNotFoundCta ) + '</a>',
-                    'error'
-                );
-            } else if ( resp && 'missing_slug' === resp.error ) {
-                setStatus( s.missingSlug, 'warning' );
-            } else {
-                setStatus( s.upstreamError, 'error' );
-            }
+            var m = pickerFailureMessage( jqXHR );
+            setStatus( m.html, m.level );
             $select.prop( 'disabled', false );
         } );
     }
@@ -134,11 +153,7 @@
         var saved     = $select.attr( 'data-saved' ) || donatotomatoAdmin.savedCampaign || '';
 
         if ( ! campaigns.length ) {
-            setStatus(
-                format( s.noCampaigns, donatotomatoAdmin.orgSlug ) +
-                    ' <a href="' + escapeHtml( donatotomatoAdmin.campaignsUrl ) + '" target="_blank" rel="noopener">' + escapeHtml( s.noCampaignsCta ) + '</a>',
-                'warning'
-            );
+            setStatus( noCampaignsMessage(), 'warning' );
             $select.empty().append( $( '<option/>', { value: '', text: s.pickCampaign } ) );
             $select.prop( 'disabled', false );
             return;
@@ -248,12 +263,245 @@
         $preview.toggleClass( 'has-heart', heart );
     }
 
+    // --- Shortcode builder ---------------------------------------------------
+    // Client-side only: pick a campaign (same REST proxy as above), assemble a
+    // [donatotomato] / [donatotomato_button] shortcode, copy it. Nothing is
+    // saved server-side. Elements exist only on the Shortcode Builder tab.
+    var $bSelect        = $( '.donatotomato-builder-select' );
+    var $bRefresh       = $( '.donatotomato-builder-refresh' );
+    var $bStatus        = $( '.donatotomato-builder-status' );
+    var $bManualWrap    = $( '.donatotomato-builder-manual-wrap' );
+    var $bManual        = $( '.donatotomato-builder-manual' );
+    var $bManualWarning = $( '.donatotomato-builder-manual-warning' );
+    var $bOutput        = $( '.donatotomato-builder-output' );
+    var $bCopy          = $( '.donatotomato-builder-copy' );
+    var $bCopyStatus    = $( '.donatotomato-builder-copy-status' );
+    var $bTypeHelp      = $( '.donatotomato-builder-type-help' );
+
+    // Loose UUID shape (any version) — same check the block editor uses to
+    // catch paste-cut accidents in manually entered campaign IDs.
+    var UUID_PATTERN = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+    function setBuilderStatus( message, level ) {
+        $bStatus.removeClass( 'is-error is-warning' );
+        if ( level ) {
+            $bStatus.addClass( 'is-' + level );
+        }
+        $bStatus.html( message || '' );
+    }
+
+    function builderType() {
+        var $checked = $( '[name="donatotomato_builder_type"]:checked' );
+        return $checked.length ? $checked.val() : 'inline';
+    }
+
+    // Shortcode attribute values are double-quoted; strip characters that
+    // would break out of the attribute or the shortcode itself.
+    function cleanAttr( value ) {
+        return String( value || '' ).replace( /["'\[\]]/g, '' ).trim();
+    }
+
+    function builderCampaign() {
+        var manual = cleanAttr( $bManual.val() );
+        if ( manual ) {
+            return manual;
+        }
+        return cleanAttr( $bSelect.val() );
+    }
+
+    function composeShortcode() {
+        var campaign = builderCampaign();
+        if ( ! campaign ) {
+            $bOutput.val( '' );
+            $bCopy.prop( 'disabled', true );
+            return;
+        }
+
+        var shortcode;
+        if ( 'button' === builderType() ) {
+            shortcode = '[donatotomato_button campaign="' + campaign + '"';
+            var label = cleanAttr( $( '.donatotomato-builder-label' ).val() );
+            if ( label ) {
+                shortcode += ' label="' + label + '"';
+            }
+            shortcode += ']';
+        } else {
+            shortcode = '[donatotomato campaign="' + campaign + '"';
+            var width  = parseInt( $( '.donatotomato-builder-width' ).val(), 10 );
+            var height = parseInt( $( '.donatotomato-builder-height' ).val(), 10 );
+            // Only emit size attributes when they differ from the shortcode's
+            // own defaults — keeps the common case short and readable.
+            if ( width && 480 !== width ) {
+                shortcode += ' width="' + width + '"';
+            }
+            if ( height && 600 !== height ) {
+                shortcode += ' height="' + height + '"';
+            }
+            shortcode += ']';
+        }
+
+        $bOutput.val( shortcode );
+        $bCopy.prop( 'disabled', false );
+    }
+
+    function syncBuilderRows() {
+        var type = builderType();
+        $( '.donatotomato-builder-row--inline' ).toggle( 'inline' === type );
+        $( '.donatotomato-builder-row--button' ).toggle( 'button' === type );
+        $bTypeHelp.text( $bTypeHelp.attr( 'button' === type ? 'data-button' : 'data-inline' ) || '' );
+    }
+
+    function renderBuilderCampaigns( response ) {
+        var campaigns = ( response && response.campaigns ) || [];
+        var previous  = $bSelect.val() || '';
+
+        if ( ! campaigns.length ) {
+            setBuilderStatus( noCampaignsMessage(), 'warning' );
+            $bSelect.empty().append( $( '<option/>', { value: '', text: s.pickCampaign } ) );
+            $bSelect.prop( 'disabled', false );
+            composeShortcode();
+            return;
+        }
+
+        $bSelect.empty();
+        $bSelect.append( $( '<option/>', { value: '', text: s.pickCampaign } ) );
+        campaigns.forEach( function ( c ) {
+            $bSelect.append( $( '<option/>', {
+                value: c.id,
+                text:  c.name + ' (' + statusLabel( c.status ) + ')',
+            } ) );
+        } );
+        if ( previous ) {
+            // Keep the user's selection across a Refresh when it still exists.
+            $bSelect.val( previous );
+            if ( $bSelect.val() !== previous ) {
+                $bSelect.val( '' );
+            }
+        }
+
+        setBuilderStatus( '' );
+        $bSelect.prop( 'disabled', false );
+        composeShortcode();
+    }
+
+    function loadBuilderCampaigns( opts ) {
+        opts = opts || {};
+        if ( ! hasSlug ) {
+            setBuilderStatus(
+                escapeHtml( s.missingSlugBuilder ) + ' <a href="' + escapeHtml( donatotomatoAdmin.generalTabUrl ) + '">' + escapeHtml( s.missingSlugCta ) + '</a>',
+                'warning'
+            );
+            $bSelect.prop( 'disabled', true );
+            return;
+        }
+
+        setBuilderStatus( opts.refresh ? s.refreshing : s.loading );
+        $bSelect.prop( 'disabled', true );
+
+        requestCampaigns( opts.refresh ).done( function ( response ) {
+            renderBuilderCampaigns( response );
+        } ).fail( function ( jqXHR ) {
+            var m = pickerFailureMessage( jqXHR );
+            setBuilderStatus( m.html, m.level );
+            $bSelect.prop( 'disabled', false );
+            // The picker is unavailable — surface the manual-entry fallback so
+            // the user can still finish building their shortcode.
+            $bManualWrap.attr( 'open', 'open' );
+        } );
+    }
+
+    var copyResetTimer = null;
+    function flashCopyButton( text ) {
+        var original = s.copyShortcode;
+        $bCopy.text( text );
+        if ( copyResetTimer ) {
+            window.clearTimeout( copyResetTimer );
+        }
+        copyResetTimer = window.setTimeout( function () {
+            $bCopy.text( original );
+        }, 2000 );
+    }
+
+    function copyBuilderShortcode() {
+        var shortcode = $bOutput.val();
+        if ( ! shortcode ) {
+            return;
+        }
+        $bCopyStatus.text( '' );
+        if ( navigator.clipboard && navigator.clipboard.writeText ) {
+            navigator.clipboard.writeText( shortcode ).then( function () {
+                flashCopyButton( s.copied );
+            }, function () {
+                legacyCopy( shortcode );
+            } );
+        } else {
+            legacyCopy( shortcode );
+        }
+    }
+
+    function legacyCopy( shortcode ) {
+        // execCommand fallback for non-secure contexts (plain-http admin).
+        var input = $bOutput.get( 0 );
+        input.focus();
+        input.select();
+        var ok = false;
+        try {
+            ok = document.execCommand( 'copy' );
+        } catch ( err ) {
+            ok = false;
+        }
+        if ( ok ) {
+            flashCopyButton( s.copied );
+        } else {
+            // Leave the text selected so a manual Ctrl+C finishes the job.
+            $bCopyStatus.text( s.copyManually );
+        }
+    }
+
+    if ( $bSelect.length ) {
+        $bRefresh.on( 'click', function ( e ) {
+            e.preventDefault();
+            loadBuilderCampaigns( { refresh: true } );
+        } );
+
+        $bSelect.on( 'change', composeShortcode );
+
+        $bManual.on( 'input', function () {
+            var manual = cleanAttr( $bManual.val() );
+            $bManualWarning.removeClass( 'is-warning' ).text( '' );
+            if ( manual && ! UUID_PATTERN.test( manual ) ) {
+                $bManualWarning.addClass( 'is-warning' ).text( s.malformedId );
+            }
+            composeShortcode();
+        } );
+
+        $( document ).on( 'change', '[name="donatotomato_builder_type"]', function () {
+            syncBuilderRows();
+            composeShortcode();
+        } );
+
+        $( document ).on( 'input change', '.donatotomato-builder-width, .donatotomato-builder-height, .donatotomato-builder-label', composeShortcode );
+
+        $bCopy.on( 'click', function ( e ) {
+            e.preventDefault();
+            copyBuilderShortcode();
+        } );
+
+        syncBuilderRows();
+        composeShortcode();
+        loadBuilderCampaigns();
+    }
+
     // --- Boot ---------------------------------------------------------------
-    if ( hasSlug ) {
-        loadCampaigns();
-    } else {
-        setStatus( s.missingSlug + ' <a href="' + escapeHtml( donatotomatoAdmin.generalTabUrl ) + '">' + escapeHtml( s.missingSlugCta ) + '</a>', 'warning' );
-        $select.prop( 'disabled', true );
+    // The same script loads on every tab of the settings page; only boot the
+    // floating-button picker when its tab (and its select) is rendered.
+    if ( $select.length ) {
+        if ( hasSlug ) {
+            loadCampaigns();
+        } else {
+            setStatus( missingSlugMessage(), 'warning' );
+            $select.prop( 'disabled', true );
+        }
     }
     renderPreview();
 
