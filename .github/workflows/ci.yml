@@ -15,6 +15,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Runs before the expensive steps so a hand-edited version fails in
+      # seconds. No step in this pipeline ever compared two version locations to
+      # each other: the version read below only names the zip, and release.yml
+      # checks the git tag against package.json alone.
+      #
+      # This gates the git tree only. Publishing is a manual copy into SVN, so
+      # the release procedure runs `--check <svn working copy>` before `svn ci`.
+      - name: Check version consistency
+        run: python3 bin/bump-version.py --check
+
       - name: Set up Node 20
         uses: actions/setup-node@v4
         with:
