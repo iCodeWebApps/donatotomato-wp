@@ -15,6 +15,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Runs before the expensive steps so a hand-edited version fails in
+      # seconds. Nothing else in the pipeline compares these: the version read
+      # below only names the zip, and release.yml checks the git tag against
+      # package.json alone, which leaves the other four locations unguarded.
+      - name: Check version consistency
+        run: python3 bin/bump-version.py --check
+
       - name: Set up Node 20
         uses: actions/setup-node@v4
         with:
