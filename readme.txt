@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.10
+Stable tag: 1.4.11
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -192,6 +192,18 @@ The Shortcode Builder has a checkbox for this, so you do not have to type it by 
 
 If your organization only has one active campaign, the donor goes straight to it and never sees a list.
 
+= Offering only some of your campaigns (new in 1.4.11) =
+
+When that list gets long, you can point one page at part of it. Give each campaign a group name in your DonatoTomato dashboard, then name the group in the shortcode:
+
+`[donatotomato choose="yes" group="Missionaries"]`
+
+`[donatotomato_button choose="yes" group="Programs" label="Support a program"]`
+
+The donor sees only the campaigns in that group. Add a worker to the group later and every page offering that group picks them up on its own, with nothing to edit. Capitalisation and extra spaces do not have to match what you typed in the dashboard, and names containing spaces or an ampersand work as written. The Shortcode Builder has a box for the group, so this does not have to be typed by hand either.
+
+A group is a way to shorten a long list rather than a way to hide a campaign: a visitor can still reach every active campaign through an embed with no group. If a group has no active campaigns in it, the form says so plainly and offers a link to your full list. Leave the group out and the donor sees every active campaign, exactly as before.
+
 **Adding to your nav menu:** Most themes support adding a Custom Link or Custom HTML to the menu. Use the shortcode in a Custom HTML block, or paste the rendered HTML directly: `<button type="button" class="donatotomato-button" data-dt-donate="your-campaign-id">Donate</button>` (works only after the plugin is active so the supporting script is loaded).
 
 == Screenshots ==
@@ -202,6 +214,13 @@ If your organization only has one active campaign, the donor goes straight to it
 4. DonatoTomato settings: position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.11 =
+* New: narrow the donor's list to one group. Add group="Missionaries" alongside choose="yes" and the form offers only the campaigns you put in that group, so one page can offer your missionaries and another your programs.
+* Works on both the inline form and the donate button, and the Shortcode Builder has a box for it.
+* Group names are set per campaign in your DonatoTomato dashboard. Capitalisation and extra spaces do not have to match, and names with spaces or an ampersand work as-is.
+* A group that has no active campaigns shows the same friendly "nothing here right now" screen the donation form already uses, with a link to your full list.
+* Existing shortcodes are unchanged. Without a group attribute every shortcode behaves exactly as it did in 1.4.10.
 
 = 1.4.10 =
 * New: let donors choose the destination. Add choose="yes" to either shortcode and the form opens on a list of your active campaigns, so one embed covers every fund. Built for organizations that give per missionary, program or project.
@@ -295,6 +314,9 @@ If your organization only has one active campaign, the donor goes straight to it
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.4.11 =
+Adds an optional group attribute to both shortcodes, so one page can offer only your missionaries and another only your programs. Group names are set per campaign in your DonatoTomato dashboard. Existing shortcodes are unchanged.
 
 = 1.4.6 =
 Listing clarity update: the title and description now surface the donor management, accounting, and year-end tax statements included with your DonatoTomato account. No functional changes to the plugin.

@@ -85,14 +85,32 @@ function donatotomato_is_truthy_att( $value ) {
  * @param string $campaign Campaign ID, or '' to let the donor choose.
  * @param int    $width    Iframe width in pixels.
  * @param int    $height   Iframe height in pixels.
+ * @param string $group    Optional group label narrowing the destination list
+ *                         to the campaigns the organization gave that label.
+ *                         Ignored unless the donor is choosing.
  * @return string Iframe markup.
  */
-function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 600 ) {
+function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 600, $group = '' ) {
     $path = '/widget/' . rawurlencode( $slug );
     if ( '' !== $campaign ) {
         $path .= '/' . rawurlencode( $campaign );
     }
-    $src = esc_url( DONATOTOMATO_APP_URL . $path . '?source=wordpress' );
+
+    $query = '?source=wordpress';
+
+    // A group narrows the destination list to one label the organization
+    // authored, so a single embed can offer "the missionaries" while another
+    // offers "the programs". It only means something on the campaign-less
+    // picker route — a one-campaign embed has nothing left to narrow — which
+    // is the same condition embed.js applies to its own data-dt-group.
+    //
+    // An absent group appends nothing at all, so every shortcode written
+    // before this attribute existed still renders the exact bytes it did.
+    if ( '' === $campaign && '' !== $group ) {
+        $query .= '&group=' . rawurlencode( $group );
+    }
+
+    $src = esc_url( DONATOTOMATO_APP_URL . $path . $query );
 
     return sprintf(
         '<div class="donatotomato-wrapper" style="max-width:%dpx;">' .

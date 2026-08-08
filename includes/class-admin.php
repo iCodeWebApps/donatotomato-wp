@@ -846,6 +846,28 @@ class DonatoTomato_Admin {
                             <?php esc_html_e( 'The form opens on a list of your active campaigns, so one embed covers every fund. Use this if you give per missionary, program, or project. Leave it off to embed a single campaign.', 'donatotomato' ); ?>
                         </span>
                     </p>
+
+                    <div class="donatotomato-builder-group-wrap" style="display:none;">
+                        <p>
+                            <label for="donatotomato_builder_group">
+                                <strong><?php esc_html_e( 'Narrow the list to one group (optional)', 'donatotomato' ); ?></strong>
+                            </label>
+                            <br />
+                            <input type="text"
+                                   id="donatotomato_builder_group"
+                                   class="regular-text donatotomato-builder-group"
+                                   list="donatotomato-builder-groups"
+                                   maxlength="60"
+                                   placeholder="<?php esc_attr_e( 'All active campaigns', 'donatotomato' ); ?>" />
+                            <datalist id="donatotomato-builder-groups"></datalist>
+                        </p>
+                        <p class="description">
+                            <?php esc_html_e( 'Leave this empty and the list offers every active campaign. Enter a group name and it offers only the campaigns you put in that group, so one page can offer your missionaries and another your programs.', 'donatotomato' ); ?>
+                        </p>
+                        <p class="description">
+                            <?php esc_html_e( 'Groups are set per campaign in your DonatoTomato dashboard, and the name here has to match the one you typed there. Capitalisation and extra spaces do not matter. A group is a way to shorten a long list, not a way to hide a campaign — anyone can still reach every active campaign through an embed with no group.', 'donatotomato' ); ?>
+                        </p>
+                    </div>
                 </section>
 
                 <section class="donatotomato-section donatotomato-builder-campaign-section">

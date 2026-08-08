@@ -26,12 +26,14 @@ class DonatoTomato_Button_Shortcode {
             'slug'     => '', // Override the global org slug for this button.
             'campaign' => '',
             'choose'   => '',
+            'group'    => '',
             'label'    => __( 'Donate', 'donatotomato' ),
             'class'    => '',
         ], $atts, 'donatotomato_button' );
 
         $slug     = sanitize_text_field( $atts['slug'] );
         $campaign = sanitize_text_field( $atts['campaign'] );
+        $group    = sanitize_text_field( $atts['group'] );
         $label    = sanitize_text_field( $atts['label'] );
 
         // See class-shortcode.php: explicit opt-in, because an empty campaign
@@ -82,11 +84,22 @@ class DonatoTomato_Button_Shortcode {
             $tenant_attr = ' data-dt-tenant="' . esc_attr( $slug ) . '"';
         }
 
+        // embed.js reads data-dt-group and narrows the picker to that label,
+        // but only alongside an empty data-dt-donate — it drops the group the
+        // moment a campaign is present, exactly as the inline shortcode does.
+        // Emitting the attribute only in picker mode keeps the rendered markup
+        // of every button written before this attribute existed unchanged.
+        $group_attr = '';
+        if ( '' === $campaign && '' !== $group ) {
+            $group_attr = ' data-dt-group="' . esc_attr( $group ) . '"';
+        }
+
         return sprintf(
-            '<button type="button" class="%s" data-dt-donate="%s"%s>%s</button>',
+            '<button type="button" class="%s" data-dt-donate="%s"%s%s>%s</button>',
             esc_attr( $classes ),
             esc_attr( $campaign ),
             $tenant_attr,
+            $group_attr,
             esc_html( $label )
         );
     }

@@ -321,11 +321,19 @@
             return;
         }
 
+        // A group narrows the donor's list to one label. It only means anything
+        // while the donor is choosing, so a leftover value in the box cannot
+        // leak into a single-campaign shortcode after the checkbox is cleared.
+        var group = choose ? cleanAttr( $( '.donatotomato-builder-group' ).val() ) : '';
+
         var shortcode;
         if ( 'button' === builderType() ) {
             shortcode = choose
                 ? '[donatotomato_button choose="yes"'
                 : '[donatotomato_button campaign="' + campaign + '"';
+            if ( group ) {
+                shortcode += ' group="' + group + '"';
+            }
             var label = cleanAttr( $( '.donatotomato-builder-label' ).val() );
             if ( label ) {
                 shortcode += ' label="' + label + '"';
@@ -335,6 +343,9 @@
             shortcode = choose
                 ? '[donatotomato choose="yes"'
                 : '[donatotomato campaign="' + campaign + '"';
+            if ( group ) {
+                shortcode += ' group="' + group + '"';
+            }
             var width  = parseInt( $( '.donatotomato-builder-width' ).val(), 10 );
             var height = parseInt( $( '.donatotomato-builder-height' ).val(), 10 );
             // Only emit size attributes when they differ from the shortcode's
@@ -360,13 +371,42 @@
         // Picking a single campaign is meaningless while the donor is choosing,
         // so hide that whole section rather than leave a control that does
         // nothing. Width/height and label still apply and stay visible.
-        $( '.donatotomato-builder-campaign-section' )
-            .toggle( ! $( '.donatotomato-builder-choose' ).is( ':checked' ) );
+        var choose = $( '.donatotomato-builder-choose' ).is( ':checked' );
+        $( '.donatotomato-builder-campaign-section' ).toggle( ! choose );
+        // The group box narrows a list that only exists while donors choose.
+        $( '.donatotomato-builder-group-wrap' ).toggle( choose );
+    }
+
+    // Offer the groups this organization has already used, so the name is typed
+    // once and picked from then on. The campaigns endpoint does not carry the
+    // group yet (DT-296); reading it defensively means the datalist starts
+    // working the day it does, with no change here.
+    function renderBuilderGroups( campaigns ) {
+        var seen   = {};
+        var groups = [];
+        ( campaigns || [] ).forEach( function ( c ) {
+            var g = c && c.picker_group ? String( c.picker_group ).trim() : '';
+            if ( g && ! Object.prototype.hasOwnProperty.call( seen, g.toLowerCase() ) ) {
+                seen[ g.toLowerCase() ] = true;
+                groups.push( g );
+            }
+        } );
+
+        var $list = $( '#donatotomato-builder-groups' );
+        if ( ! $list.length ) {
+            return;
+        }
+        $list.empty();
+        groups.sort().forEach( function ( g ) {
+            $list.append( $( '<option/>', { value: g } ) );
+        } );
     }
 
     function renderBuilderCampaigns( response ) {
         var campaigns = ( response && response.campaigns ) || [];
         var previous  = $bSelect.val() || '';
+
+        renderBuilderGroups( campaigns );
 
         if ( ! campaigns.length ) {
             setBuilderStatus( noCampaignsMessage(), 'warning' );
@@ -498,7 +538,7 @@
             composeShortcode();
         } );
 
-        $( document ).on( 'input change', '.donatotomato-builder-width, .donatotomato-builder-height, .donatotomato-builder-label', composeShortcode );
+        $( document ).on( 'input change', '.donatotomato-builder-width, .donatotomato-builder-height, .donatotomato-builder-label, .donatotomato-builder-group', composeShortcode );
 
         $bCopy.on( 'click', function ( e ) {
             e.preventDefault();

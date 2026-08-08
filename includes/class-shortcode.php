@@ -32,12 +32,14 @@ class DonatoTomato_Shortcode {
             'slug'     => get_option( 'donatotomato_org_slug', '' ),
             'campaign' => '',
             'choose'   => '',
+            'group'    => '',
             'width'    => 480,
             'height'   => 600,
         ], $atts, 'donatotomato' );
 
         $slug     = sanitize_text_field( $atts['slug'] );
         $campaign = sanitize_text_field( $atts['campaign'] );
+        $group    = sanitize_text_field( $atts['group'] );
         $width    = absint( $atts['width'] ) ?: 480;
         $height   = absint( $atts['height'] ) ?: 600;
 
@@ -68,6 +70,13 @@ class DonatoTomato_Shortcode {
 
         // choose wins if both are given — the donor-facing chooser is the more
         // specific instruction, and silently ignoring it would be worse.
-        return donatotomato_render_iframe( $slug, $choose ? '' : $campaign, $width, $height );
+        //
+        // group is passed through unconditionally and dropped downstream when a
+        // campaign survives. Pairing group with an explicit campaign is
+        // harmless rather than wrong: the author asked for one fund and named
+        // the shelf it sits on, so the narrower instruction simply wins. An
+        // error there would punish a combination that costs nothing, and
+        // embed.js already resolves the same pairing the same silent way.
+        return donatotomato_render_iframe( $slug, $choose ? '' : $campaign, $width, $height, $group );
     }
 }
