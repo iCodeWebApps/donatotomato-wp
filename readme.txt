@@ -8,11 +8,11 @@ Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Donate button + donation forms for your nonprofit's WordPress site. Gifts land in your own Stripe. Donor records + year-end statements built in.
+Donate button + donation forms for your nonprofit. Flat 1% platform fee plus Stripe processing, and no donor tipping. Gifts land in your own Stripe.
 
 == Description ==
 
-Add a donate button or an embedded donation form to your nonprofit's WordPress site with no code. Donors give once or start a monthly gift, and donations go straight into your own Stripe account, with automatic tax receipts. Your connected account also includes donor records, fundraising accounting, and year-end tax statements at no extra cost. There is a flat 1% platform fee on top of Stripe's standard payment processing, and no monthly fee.
+Add a donate button or an embedded donation form to your nonprofit's WordPress site with no code. Donors give once or start a monthly gift, and donations go straight into your own Stripe account, with automatic tax receipts. Your connected account also includes donor records, fundraising accounting, and year-end tax statements at no extra cost. There is a flat 1% platform fee on top of Stripe's standard payment processing, no monthly fee, and your donors are never asked for a tip.
 
 DonatoTomato is operated by Dev1 Consulting LLC, a US company. Donations are processed through Stripe Connect and land directly in your nonprofit's own Stripe account, so your organization is the merchant of record and we never hold your funds.
 
@@ -37,7 +37,7 @@ This plugin is open source (GPL-2.0-or-later) with full, unminified source publi
 * Accept one-time and recurring (monthly) donations from a single form
 * Donors manage or cancel their own monthly gift from a link in the receipt email, with no login and nothing for your staff to process
 * Automatic branded receipt emails, including valid IRS tax-deductible acknowledgments under Section 170(f)(8) for organizations with a confirmed EIN
-* Goal progress bars, optional donor-paid card-processing fees (opt-in), and Apple Pay / Google Pay through Stripe
+* Goal progress bars, an optional donor-paid card-processing fee checkbox (off by default, never pre-checked), and Apple Pay / Google Pay through Stripe
 * Donations go directly into your own connected Stripe account: your nonprofit is the merchant of record, and DonatoTomato never holds your money
 * Branded with your nonprofit's logo and colors
 * No transaction data stored on your WordPress site: all payments handled securely by Stripe
@@ -46,7 +46,7 @@ This plugin is open source (GPL-2.0-or-later) with full, unminified source publi
 
 Beyond the on-site form, the free DonatoTomato account this plugin connects to includes the back office for running donations:
 
-* Donor management (CRM): donor profiles, lifetime giving totals, active and lapsed donor segmentation, notes, and CSV import of your existing donor history.
+* Donor management (CRM): donor profiles, lifetime giving totals, active and lapsed donor segmentation, and CSV import of your existing donor history.
 * Fundraising accounting: a reporting dashboard that reconciles gross raised, the 1% platform fee, actual Stripe processing fees, and your true net, with CSV export.
 * Year-end tax statements: consolidated annual giving statements for each donor, with your EIN and the IRS acknowledgment language, ready to email or print.
 
@@ -85,7 +85,11 @@ Donations are charged through your own Stripe account, connected inside DonatoTo
 
 = What does DonatoTomato cost? =
 
-Two costs apply to each donation. DonatoTomato charges a flat 1% platform fee. Separately, Stripe charges its standard payment processing (about 2.9% + 30¢ per transaction, or 2.2% + 30¢ for verified 501(c)(3) nonprofits), billed by Stripe the same as on any Stripe transaction. There is no monthly fee, no setup fee, and no contract from DonatoTomato. Donations are charged through your own connected Stripe account, so your nonprofit is the merchant of record and the money lands in your Stripe, not ours. Donors can optionally choose to cover the Stripe processing fee at checkout.
+Two costs apply to each donation. DonatoTomato charges a flat 1% platform fee. Separately, Stripe charges its standard payment processing (about 2.9% + 30¢ per transaction, or 2.2% + 30¢ for verified 501(c)(3) nonprofits), billed by Stripe the same as on any Stripe transaction. There is no monthly fee, no setup fee, and no contract from DonatoTomato. Donations are charged through your own connected Stripe account, so your nonprofit is the merchant of record and the money lands in your Stripe, not ours. Donors can optionally choose to cover the Stripe processing fee at checkout, from a checkbox that is off by default.
+
+= Does DonatoTomato ask my donors for a tip? =
+
+No. There is no tip slider, no suggested tip, and no tip screen anywhere in the donation flow. DonatoTomato is paid by the flat 1% platform fee your organization pays, plus Stripe's standard processing, so there is nothing for us to ask your donors for. The one optional checkbox a donor can tick is labeled as covering the card processing fee, it is off by default and is never pre-checked, and DonatoTomato takes nothing extra when a donor ticks it.
 
 = Does the floating Donate button work on mobile? =
 
