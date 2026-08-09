@@ -321,7 +321,7 @@ class DonatoTomato_Admin {
             <?php
             printf(
                 /* translators: 1: create-account link, 2: campaigns dashboard link */
-                wp_kses_post( __( 'New to DonatoTomato? %1$s — it\'s free. Already have an account? Open any campaign in your %2$s and copy the Organization ID shown in its "Add to your website" panel, then paste it here. Used as the default Organization ID for all widgets on this site.', 'donatotomato' ) ),
+                wp_kses_post( __( 'New to DonatoTomato? %1$s. Creating the account costs nothing and there is no monthly fee: DonatoTomato charges a flat 1%% platform fee per donation on top of Stripe\'s standard processing, and your donors are never asked for a tip. Already have an account? Open any campaign in your %2$s and copy the Organization ID shown in its "Add to your website" panel, then paste it here. Used as the default Organization ID for all widgets on this site.', 'donatotomato' ) ),
                 '<a href="' . esc_url( self::signup_url() ) . '" target="_blank" rel="noopener">' . esc_html__( 'Create a free account', 'donatotomato' ) . '</a>',
                 '<a href="' . esc_url( 'https://app.donatotomato.com/campaigns' ) . '" target="_blank" rel="noopener">' . esc_html__( 'DonatoTomato dashboard', 'donatotomato' ) . '</a>'
             );
