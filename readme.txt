@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: nonprofit, donations, fundraising, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.11
+Stable tag: 1.4.12
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -218,6 +218,10 @@ A group is a way to shorten a long list rather than a way to hide a campaign: a 
 4. DonatoTomato settings: position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.12 =
+* The plugin settings screen now states the cost alongside the account link: creating the account costs nothing, and DonatoTomato charges a flat 1% platform fee per donation on top of Stripe's standard processing, with no donor tipping. Previously the screen only said the account was free.
+* Listing wording: receipts are described as issued for organizations with a valid EIN on file (previously "confirmed EIN").
 
 = 1.4.11 =
 * New: narrow the donor's list to one group. Add group="Missionaries" alongside choose="yes" and the form offers only the campaigns you put in that group, so one page can offer your missionaries and another your programs.
