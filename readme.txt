@@ -36,7 +36,7 @@ This plugin is open source (GPL-2.0-or-later) with full, unminified source publi
 * Mobile-responsive with smaller offset on small screens
 * Accept one-time and recurring (monthly) donations from a single form
 * Donors manage or cancel their own monthly gift from a link in the receipt email, with no login and nothing for your staff to process
-* Automatic branded receipt emails, including valid IRS tax-deductible acknowledgments under Section 170(f)(8) for organizations with a confirmed EIN
+* Automatic branded receipt emails, including valid IRS tax-deductible acknowledgments under Section 170(f)(8) for organizations with a valid EIN on file
 * Goal progress bars, an optional donor-paid card-processing fee checkbox (off by default, never pre-checked), and Apple Pay / Google Pay through Stripe
 * Donations go directly into your own connected Stripe account: your nonprofit is the merchant of record, and DonatoTomato never holds your money
 * Branded with your nonprofit's logo and colors
