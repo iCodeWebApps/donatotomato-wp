@@ -220,7 +220,7 @@ A group is a way to shorten a long list rather than a way to hide a campaign: a 
 == Changelog ==
 
 = 1.4.13 =
-* Fixed: saving the General tab wiped every Floating Donate Button setting. If you had the floating button configured, pressing "Save Settings" on General turned it off and cleared its campaign, label, colour, position and visibility rules, while reporting "Settings saved." Each tab now saves only its own settings. Present since 1.3.0.
+* Fixed: saving the General tab wiped every Floating Donate Button setting. If you had the floating button configured, pressing "Save Settings" on General turned it off and cleared its campaign, label, color, position and visibility rules, while reporting "Settings saved." Each tab now saves only its own settings. Present since 1.3.0.
 * Note for anyone already affected: this stops any further loss, but settings already cleared cannot be recovered. Re-enter them once on the Floating Donate Button tab and they will stay put.
 * Listing metadata: the plugin title now leads with what it does, the directory tags cover the donation and donate keywords, and compatibility is declared against WordPress 7.1.
 

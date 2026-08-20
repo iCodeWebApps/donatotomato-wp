@@ -772,9 +772,9 @@ class DonatoTomato_Admin {
                         </div>
                     </section>
 
-                </fieldset>
+                    <?php submit_button( __( 'Save Settings', 'donatotomato' ) ); ?>
 
-                <?php submit_button( __( 'Save Settings', 'donatotomato' ) ); ?>
+                </fieldset>
             </form>
         </div>
         <?php
