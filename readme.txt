@@ -1,9 +1,9 @@
-=== DonatoTomato - Nonprofit Donation Forms, Recurring Giving & Tax Receipts ===
+=== DonatoTomato - Donation Plugin for Nonprofits - Fundraising & Recurring Giving ===
 Contributors: dev1consulting
-Tags: nonprofit, donations, fundraising, stripe, recurring donations
+Tags: donation, donate, nonprofit, charity, recurring donations
 Requires at least: 6.0
-Tested up to: 7.0
-Stable tag: 1.4.12
+Tested up to: 7.1
+Stable tag: 1.4.13
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -218,6 +218,9 @@ A group is a way to shorten a long list rather than a way to hide a campaign: a 
 4. DonatoTomato settings: position, visibility rules, and live preview of the button.
 
 == Changelog ==
+
+= 1.4.13 =
+* Listing metadata only, no functional change: the plugin title now leads with what it does, the directory tags cover donation, donate and charity, and compatibility is declared against WordPress 7.1.
 
 = 1.4.12 =
 * The plugin settings screen now states the cost alongside the account link: creating the account costs nothing, and DonatoTomato charges a flat 1% platform fee per donation on top of Stripe's standard processing, with no donor tipping. Previously the screen only said the account was free.

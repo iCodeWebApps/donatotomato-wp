@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: DonatoTomato - Nonprofit Donation Forms, Recurring Giving & Tax Receipts
+ * Plugin Name: DonatoTomato - Donation Plugin for Nonprofits - Fundraising & Recurring Giving
  * Plugin URI:  https://donatotomato.com
  * Description: Embed a DonatoTomato donation widget on any page or post.
- * Version:     1.4.12
+ * Version:     1.4.13
  * Author:      DonatoTomato
  * License:     GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'DONATOTOMATO_VERSION', '1.4.12' );
+define( 'DONATOTOMATO_VERSION', '1.4.13' );
 define( 'DONATOTOMATO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DONATOTOMATO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'DONATOTOMATO_APP_URL', 'https://app.donatotomato.com' );
