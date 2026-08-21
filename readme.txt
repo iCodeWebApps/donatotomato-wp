@@ -1,9 +1,9 @@
-=== DonatoTomato - Nonprofit Donation Forms, Recurring Giving & Tax Receipts ===
+=== DonatoTomato - Donation Plugin for Nonprofits - Fundraising & Recurring Giving ===
 Contributors: dev1consulting
-Tags: nonprofit, donations, fundraising, stripe, recurring donations
+Tags: donation, donate, nonprofit, stripe, recurring donations
 Requires at least: 6.0
-Tested up to: 7.0
-Stable tag: 1.4.12
+Tested up to: 7.1
+Stable tag: 1.4.13
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -219,6 +219,11 @@ A group is a way to shorten a long list rather than a way to hide a campaign: a 
 
 == Changelog ==
 
+= 1.4.13 =
+* Fixed: saving the General tab wiped every Floating Donate Button setting. If you had the floating button configured, pressing "Save Settings" on General turned it off and cleared its campaign, label, color, position and visibility rules, while reporting "Settings saved." Each tab now saves only its own settings. Present since 1.3.0.
+* Note for anyone already affected: this stops any further loss, but settings already cleared cannot be recovered. Re-enter them once on the Floating Donate Button tab and they will stay put.
+* Listing metadata: the plugin title now leads with what it does, the directory tags cover the donation and donate keywords, and compatibility is declared against WordPress 7.1.
+
 = 1.4.12 =
 * The plugin settings screen now states the cost alongside the account link: creating the account costs nothing, and DonatoTomato charges a flat 1% platform fee per donation on top of Stripe's standard processing, with no donor tipping. Previously the screen only said the account was free.
 * Listing wording: receipts are described as issued for organizations with a valid EIN on file (previously "confirmed EIN").
@@ -322,6 +327,9 @@ A group is a way to shorten a long list rather than a way to hide a campaign: a 
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.4.13 =
+Fixes a bug present since 1.3.0 where saving the General tab silently cleared every Floating Donate Button setting. Recommended for anyone using the floating button. Settings already lost need re-entering once; nothing else changes.
 
 = 1.4.11 =
 Adds an optional group attribute to both shortcodes, so one page can offer only your missionaries and another only your programs. Group names are set per campaign in your DonatoTomato dashboard. Existing shortcodes are unchanged.

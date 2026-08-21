@@ -17,8 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class DonatoTomato_Admin {
 
-    const PAGE_SLUG    = 'donatotomato';
-    const OPTION_GROUP = 'donatotomato_settings';
+    const PAGE_SLUG             = 'donatotomato';
+    const OPTION_GROUP_GENERAL  = 'donatotomato_settings';
+    const OPTION_GROUP_FLOATING = 'donatotomato_settings_floating';
 
     /**
      * App signup URL, tagged for the plugin hand-off:
@@ -151,7 +152,7 @@ class DonatoTomato_Admin {
 
     public function register_settings() {
         // Organization Slug (existing General tab setting).
-        register_setting( self::OPTION_GROUP, 'donatotomato_org_slug', [
+        register_setting( self::OPTION_GROUP_GENERAL, 'donatotomato_org_slug', [
             'type'              => 'string',
             'show_in_rest'      => true,
             'sanitize_callback' => 'sanitize_text_field',
@@ -161,62 +162,62 @@ class DonatoTomato_Admin {
         // Floating Donate Button settings (new tab). Each registered with a
         // dedicated sanitize_callback so options.php saves through the WP
         // Settings API safely.
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_enabled', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_enabled', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_bool_string' ],
             'default'           => '0',
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_campaign', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_campaign', [
             'type'              => 'string',
             'sanitize_callback' => 'sanitize_text_field',
             'default'           => '',
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_label', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_label', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_label' ],
             'default'           => '',
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_size', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_size', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_size' ],
             'default'           => 'medium',
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_shape', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_shape', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_shape' ],
             'default'           => 'pill',
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_color', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_color', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_color' ],
             'default'           => '',
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_show_heart', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_show_heart', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_bool_string' ],
             'default'           => '0',
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_position', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_position', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_position' ],
             'default'           => 'bottom-right',
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_offset', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_offset', [
             'type'              => 'integer',
             'sanitize_callback' => [ $this, 'sanitize_offset' ],
             'default'           => 24,
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_zindex', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_zindex', [
             'type'              => 'integer',
             'sanitize_callback' => [ $this, 'sanitize_zindex' ],
             'default'           => 999999,
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_exclude_ids', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_exclude_ids', [
             'type'              => 'array',
             'sanitize_callback' => [ $this, 'sanitize_id_list' ],
             'default'           => [],
         ] );
-        register_setting( self::OPTION_GROUP, 'donatotomato_floating_auto_hide_inline', [
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_auto_hide_inline', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_bool_string' ],
             'default'           => '1',
@@ -380,7 +381,7 @@ class DonatoTomato_Admin {
         ?>
         <form method="post" action="options.php">
             <?php
-            settings_fields( self::OPTION_GROUP );
+            settings_fields( self::OPTION_GROUP_GENERAL );
             do_settings_sections( self::PAGE_SLUG );
             submit_button( __( 'Save Settings', 'donatotomato' ) );
             ?>
@@ -496,9 +497,7 @@ class DonatoTomato_Admin {
             <?php endif; ?>
 
             <form method="post" action="options.php" class="donatotomato-floating-form" <?php echo '' === $org_slug ? 'aria-disabled="true"' : ''; ?>>
-                <?php settings_fields( self::OPTION_GROUP ); ?>
-
-                <input type="hidden" name="donatotomato_org_slug" value="<?php echo esc_attr( $org_slug ); ?>" />
+                <?php settings_fields( self::OPTION_GROUP_FLOATING ); ?>
 
                 <fieldset class="donatotomato-fieldset" <?php echo '' === $org_slug ? 'disabled="disabled"' : ''; ?>>
 
@@ -773,9 +772,9 @@ class DonatoTomato_Admin {
                         </div>
                     </section>
 
-                </fieldset>
+                    <?php submit_button( __( 'Save Settings', 'donatotomato' ) ); ?>
 
-                <?php submit_button( __( 'Save Settings', 'donatotomato' ) ); ?>
+                </fieldset>
             </form>
         </div>
         <?php
