@@ -1,0 +1,14 @@
+{
+  "warnings": [
+    {
+      "file": "readme.txt",
+      "code": "trademarked_term",
+      "why": "The listing name contains the word Plugin. Kept deliberately; remove this entry if the name changes."
+    },
+    {
+      "file": "donatotomato.php",
+      "code": "trademarked_term",
+      "why": "The same name in the plugin header."
+    }
+  ]
+}

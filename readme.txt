@@ -341,10 +341,10 @@ Listing clarity update: the title and description now surface the donor manageme
 Maintenance + hardening: full data cleanup on uninstall, the resize listener now verifies the message origin, and the embedded form iframe gains an accessible title. No changes to how donations work.
 
 = 1.4.4 =
-Documentation clarity update: the cost explanation now states the full fee (1% platform fee plus Stripe's standard processing), and the description surfaces recurring giving, donor self-service, tax-deductible receipts, and that donations go into your own Stripe account. No functional changes to the plugin.
+Documentation update: the cost explanation now states the full fee (1% platform fee plus Stripe processing), and the description covers recurring giving, donor self-service, tax-deductible receipts and payouts to your own Stripe account. No functional changes.
 
 = 1.4.0 =
-The Donation Widget block and Donate Button block now show a campaign picker dropdown in the editor sidebar — pick a campaign by name with status badges, no more pasting UUIDs. Adds a first-activation onboarding notice that points new installers at the Floating Donate Button settings tab, and extends the floating-button auto-hide to also detect raw `<iframe>` embeds. Existing saved blocks continue to render correctly.
+The Donation Widget and Donate Button blocks gain a campaign picker in the editor sidebar, so you pick a campaign by name instead of pasting an ID. Adds a first-activation setup notice, and the floating button also hides on pages with a pasted iframe. Existing blocks keep working.
 
 = 1.3.0 =
 Adds a one-click site-wide floating Donate button — configure once under Settings → DonatoTomato, appears on every page automatically. Existing blocks and shortcodes are unchanged.
