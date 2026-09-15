@@ -38,6 +38,15 @@ Override the org slug or dimensions for a specific widget:
 [donatotomato slug="your-org" campaign="your-campaign-id" width="480" height="600"]
 ```
 
+Let donors pick the destination instead of naming one campaign. The form opens on your active campaigns, and `group` narrows that list to a single label, set per campaign in your dashboard:
+
+```
+[donatotomato choose="yes"]
+[donatotomato choose="yes" group="Missionaries"]
+```
+
+`choose="yes"` wins if a campaign is given as well, and `group` applies only while the donor is choosing. If your organization has one active campaign, the donor goes straight to it.
+
 Gutenberg block: search for **DonatoTomato Widget** in the block inserter. Enter your Campaign ID in the settings panel; the editor shows a configured-state placeholder and the live widget renders on the published page.
 
 ### Donate button (pop-up modal trigger)
@@ -47,11 +56,18 @@ Drops a button anywhere (nav menu, hero CTA, footer) that opens the donation for
 ```
 [donatotomato_button campaign="your-campaign-id"]
 [donatotomato_button campaign="your-campaign-id" label="Give now" class="my-custom-class"]
+[donatotomato_button choose="yes" group="Programs" label="Support a program"]
 ```
+
+The button takes the same `choose` and `group` attributes as the inline widget: `choose="yes"` opens the pop-up on your active campaigns, and `group` narrows that list to one label.
 
 Gutenberg block: search for **DonatoTomato Donate Button** in the block inserter. Configure Campaign ID, button label, and optional per-button org-slug override in the settings panel.
 
 The button is powered by a small focal-modal script (`embed.js`, ~2KB gzip) auto-loaded only on pages that contain a Donate button.
+
+### Shortcode Builder (Divi, Elementor and other page builders)
+
+Page builders replace the block editor, so the blocks and their campaign picker are out of reach. **Settings → DonatoTomato → Shortcode Builder** covers that case: pick a campaign by name, choose the inline form or a donate button, set width, height, label, the destination picker and its group, then copy a complete shortcode to paste into the builder. It generates the text in your browser and changes no settings.
 
 ## Development
 
