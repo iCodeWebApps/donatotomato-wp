@@ -10,17 +10,36 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 // The findings array from the command output, which wp-env wraps in status
-// lines. A clean run prints a success line instead of JSON. Anything else
-// throws: output the gate cannot read must not pass.
+// lines. The JSON ends without a newline, so wp-env's "Ran" line follows it on
+// the same line. A clean run prints a success line instead of JSON. Anything
+// else throws: output the gate cannot read must not pass.
 export function parseFindings(text) {
   const lines = text.replace(/\x1b\[[0-9;]*m/g, '').split(/\r?\n/)
   for (const line of lines) {
     const start = line.indexOf('[{')
-    if (start >= 0) return JSON.parse(line.slice(start))
-    if (line.trim() === '[]') return []
+    if (start >= 0) return JSON.parse(line.slice(start, arrayEnd(line, start)))
+    if (line.trimStart().startsWith('[]')) return []
   }
   if (lines.some((line) => line.includes('Checks complete. No errors found.'))) return []
   throw new Error('No Plugin Check results found in the output')
+}
+
+// Index just past the bracket that closes the array opened at `start`, skipping
+// brackets inside strings. Unbalanced input runs to the end of the line, where
+// JSON.parse rejects it.
+function arrayEnd(line, start) {
+  let depth = 0
+  let inString = false
+  for (let i = start; i < line.length; i++) {
+    const char = line[i]
+    if (inString) {
+      if (char === '\\') i++
+      else if (char === '"') inString = false
+    } else if (char === '"') inString = true
+    else if (char === '[' || char === '{') depth++
+    else if ((char === ']' || char === '}') && --depth === 0) return i + 1
+  }
+  return line.length
 }
 
 export function evaluate(findings, baseline) {
