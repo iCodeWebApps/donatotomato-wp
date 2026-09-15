@@ -73,25 +73,25 @@ composer lint:fix    # auto-fix
 
 ## Releasing a new version
 
-1. Bump the version in all five canonical locations with one command:
+1. Bump every version location with one command:
    ```bash
-   python bin/bump-version.py 1.2.0
+   python bin/bump-version.py X.Y.Z
    ```
-2. Replace the auto-generated `TODO: describe changes` stub in `readme.txt`'s `== Changelog ==` with the real entry.
-3. Commit, push, and open a PR. The `CI` workflow runs PHPCS + Plugin Check against the extracted distribution zip.
-4. After merge to `main`, tag the release:
+   In `readme.txt`, replace the generated changelog stub with the real entry and add an Upgrade Notice of 300 characters at most. Set `Tested up to` only to a released WordPress version the plugin has been tested on.
+2. Open a PR to `main`. CI builds the distribution zip, runs PHPCS, and runs WordPress.org's Plugin Check against the extracted zip. The build fails on any Plugin Check error, and on any warning not listed in `bin/plugin-check-baseline.json`.
+3. After merging, tag the merge commit and push the tag. The `Release` workflow builds the zip and attaches it to a new [GitHub Release](https://github.com/iCodeWebApps/donatotomato-wp/releases):
    ```bash
-   git tag v1.2.0
-   git push origin v1.2.0
+   git tag -a vX.Y.Z -m "vX.Y.Z"
+   git push origin vX.Y.Z
    ```
-5. The `Release` workflow builds the zip and attaches it to a new [GitHub Release](https://github.com/iCodeWebApps/donatotomato-wp/releases).
-6. Push the release to WordPress.org SVN (manual until automated):
+4. Publish to WordPress.org SVN (manual). Copy only the files that changed in this release from the git working tree into `trunk/`; the release zip's line endings differ from the SVN checkout. Confirm the versions agree, then tag and commit:
    ```bash
+   python bin/bump-version.py --check /path/to/svn-checkout/trunk
    cd /path/to/svn-checkout
-   cp -r /path/to/extracted-zip/donatotomato/* trunk/
-   svn cp trunk tags/1.2.0
-   svn ci -m "Release 1.2.0"
+   svn cp trunk tags/X.Y.Z
+   svn ci -m "Release X.Y.Z"
    ```
+5. Listing artwork (banners, icons and `screenshot-N.png`) lives in the SVN `assets/` directory, next to `trunk/`, and is updated separately from releases.
 
 ## Requirements
 

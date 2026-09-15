@@ -18,13 +18,13 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 // Best-effort: clear the per-slug campaign cache transient before the slug
 // option is deleted (the campaign-picker caches the upstream response keyed on
 // md5 of the configured slug, 5-minute TTL).
-$dt_slug = get_option( 'donatotomato_org_slug', '' );
-if ( '' !== (string) $dt_slug ) {
-    delete_transient( 'donatotomato_campaigns_' . md5( (string) $dt_slug ) );
+$donatotomato_slug = get_option( 'donatotomato_org_slug', '' );
+if ( '' !== (string) $donatotomato_slug ) {
+    delete_transient( 'donatotomato_campaigns_' . md5( (string) $donatotomato_slug ) );
 }
 
 // Every option the plugin registers (General + Floating Donate Button tabs).
-$dt_options = array(
+$donatotomato_options = array(
     'donatotomato_org_slug',
     'donatotomato_floating_enabled',
     'donatotomato_floating_campaign',
@@ -39,8 +39,8 @@ $dt_options = array(
     'donatotomato_floating_exclude_ids',
     'donatotomato_floating_auto_hide_inline',
 );
-foreach ( $dt_options as $dt_option ) {
-    delete_option( $dt_option );
+foreach ( $donatotomato_options as $donatotomato_option ) {
+    delete_option( $donatotomato_option );
 }
 
 // Activation-notice signal transient.
