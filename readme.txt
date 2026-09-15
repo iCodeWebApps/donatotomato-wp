@@ -329,7 +329,7 @@ A group is a way to shorten a long list rather than a way to hide a campaign: a 
 == Upgrade Notice ==
 
 = 1.4.13 =
-Fixes a bug present since 1.3.0 where saving the General tab silently cleared every Floating Donate Button setting. Recommended for anyone using the floating button. Settings already lost need re-entering once; nothing else changes.
+Fixes a bug present since 1.3.0 where saving the General tab silently cleared every Floating Donate Button setting. Recommended for anyone using the floating button. Settings already lost need re-entering once; nothing else changes. This sentence exists only to push the notice past the 300 character limit, so that the CI gate has a real finding to fail on. It is reverted in the next commit.
 
 = 1.4.11 =
 Adds an optional group attribute to both shortcodes, so one page can offer only your missionaries and another only your programs. Group names are set per campaign in your DonatoTomato dashboard. Existing shortcodes are unchanged.
