@@ -31,6 +31,9 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Test the Plugin Check gate
+        run: node --test tests/plugin-check-gate.test.mjs
+
       - name: Install npm deps
         run: npm ci
 
@@ -64,13 +67,12 @@ jobs:
           mkdir -p /tmp/plugin-check-extract
           unzip -q "donatotomato-${{ steps.version.outputs.version }}.zip" -d /tmp/plugin-check-extract
 
-      # Plugin Check via direct wp-env invocation — the wordpress/plugin-check-action
-      # has its own wp-env setup logic that conflicts with ours (it ignores a
-      # pre-existing .wp-env.json in the repo root, then tries to spin up its own
-      # environment, hitting "service cli is not running"). Skipping the action
-      # and running the Plugin Check CLI directly inside our wp-env container is
-      # simpler + works. Same end result: `wp plugin check donatotomato` runs
-      # the official WordPress.org review tool against the extracted v1.3.0 zip.
+      # Plugin Check runs through a direct wp-env invocation: the
+      # wordpress/plugin-check-action has its own wp-env setup that conflicts
+      # with ours (it ignores this .wp-env.json and fails with "service cli is
+      # not running"). The CLI prints its findings but exits 0 whatever it
+      # finds; the action made up for that with a separate results step, and
+      # the last step here does the same with bin/plugin-check-gate.mjs.
       - name: Prepare wp-env config
         run: |
           cat > .wp-env.json <<'EOF'
@@ -86,7 +88,14 @@ jobs:
           npm install -g @wordpress/env
           wp-env start
 
+      # Fails on any ERROR, and on any WARNING not listed in
+      # bin/plugin-check-baseline.json.
       - name: Run Plugin Check (WordPress.org review tool)
         run: |
           wp-env run cli wp plugin install plugin-check --activate
-          wp-env run cli wp plugin check donatotomato
+          if ! wp-env run cli wp plugin check donatotomato --format=strict-json --fields=file,line,column,type,code,message > plugin-check.txt 2>&1; then
+            cat plugin-check.txt
+            exit 1
+          fi
+          cat plugin-check.txt
+          node bin/plugin-check-gate.mjs plugin-check.txt bin/plugin-check-baseline.json
