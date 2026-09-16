@@ -34,5 +34,6 @@
     "supports": {
         "html": false
     },
-    "editorScript": "file:./build/index.js"
+    "editorScript": "file:./build/index.js",
+    "style": "file:./assets/css/donatotomato.css"
 }
