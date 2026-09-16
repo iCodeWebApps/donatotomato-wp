@@ -2,7 +2,7 @@
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
     "name": "donatotomato/button",
-    "version": "1.4.13",
+    "version": "1.4.14",
     "title": "DonatoTomato Donate Button",
     "category": "embed",
     "icon": "heart",
@@ -38,6 +38,5 @@
             "right"
         ]
     },
-    "editorScript": "file:./build/index.js",
-    "style": "file:./assets/css/donatotomato-button.css"
+    "editorScript": "file:./build/index.js"
 }

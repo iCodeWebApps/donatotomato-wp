@@ -88,9 +88,11 @@ function donatotomato_is_truthy_att( $value ) {
  * @param string $group    Optional group label narrowing the destination list
  *                         to the campaigns the organization gave that label.
  *                         Ignored unless the donor is choosing.
+ * @param string $title    Optional accessible title for the iframe. Empty
+ *                         falls back to a title that stays unique per page.
  * @return string Iframe markup.
  */
-function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 600, $group = '' ) {
+function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 600, $group = '', $title = '' ) {
     $path = '/widget/' . rawurlencode( $slug );
     if ( '' !== $campaign ) {
         $path .= '/' . rawurlencode( $campaign );
@@ -120,6 +122,43 @@ function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 6
         $src,
         $width,
         $height,
-        esc_attr__( 'Donation form', 'donatotomato' )
+        esc_attr( '' !== $title ? $title : donatotomato_iframe_title( $group ) )
     );
+}
+
+/**
+ * A title for the next donation iframe rendered on this page.
+ *
+ * Every embed used to be titled "Donation form", so a page carrying two of
+ * them handed screen-reader users two frames it could not tell apart. A group
+ * label names the destination list it opens; otherwise repeats are numbered in
+ * render order. An explicit title="" on the shortcode wins over both.
+ *
+ * @param string $group Optional group label.
+ * @return string Title text, unique among the iframes rendered so far.
+ */
+function donatotomato_iframe_title( $group = '' ) {
+    static $used = [];
+
+    if ( '' !== $group ) {
+        $title = sprintf(
+            /* translators: %s: the group label the organization gave a set of campaigns. */
+            __( 'Donation form: %s', 'donatotomato' ),
+            $group
+        );
+    } else {
+        $title = __( 'Donation form', 'donatotomato' );
+    }
+
+    $used[ $title ] = isset( $used[ $title ] ) ? $used[ $title ] + 1 : 1;
+    if ( $used[ $title ] > 1 ) {
+        $title = sprintf(
+            /* translators: 1: the iframe title, 2: how many embeds on this page share it. */
+            __( '%1$s (%2$d)', 'donatotomato' ),
+            $title,
+            $used[ $title ]
+        );
+    }
+
+    return $title;
 }

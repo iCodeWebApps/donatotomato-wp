@@ -32,6 +32,7 @@ $donatotomato_options = array(
     'donatotomato_floating_size',
     'donatotomato_floating_shape',
     'donatotomato_floating_color',
+    'donatotomato_floating_color_resolved',
     'donatotomato_floating_show_heart',
     'donatotomato_floating_position',
     'donatotomato_floating_offset',

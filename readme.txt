@@ -3,7 +3,7 @@ Contributors: dev1consulting
 Tags: donation, donate, nonprofit, stripe, recurring donations
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 1.4.13
+Stable tag: 1.4.14
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -219,6 +219,14 @@ A group is a way to shorten a long list rather than a way to hide a campaign: a 
 
 == Changelog ==
 
+= 1.4.14 =
+* Fixed: the floating Donate button now honors "leave empty to match your campaign primary color". The settings screen has offered that since the color field shipped, but the button always fell back to the plugin's default green, and the live preview showed the first campaign's color rather than the one you picked.
+* Fixed: dismissing the welcome notice no longer hides it from your other administrators. One admin dismissing it used to retire the notice for everyone on the site.
+* Fixed: both blocks loaded their stylesheet twice, so pages using them carried a duplicate stylesheet link.
+* Accessibility: donation embeds no longer all share the frame title "Donation form". A group name is used when you set one, repeats on a page are numbered, and the inline shortcode now accepts title="Your own wording".
+* Accessibility: removed an aria-disabled attribute from the floating-button settings form that conveyed nothing to screen readers. The disabled fieldset beside it already does the real work.
+* Internal: corrected a comment describing a form input that does not exist.
+
 = 1.4.13 =
 * Fixed: saving the General tab wiped every Floating Donate Button setting. If you had the floating button configured, pressing "Save Settings" on General turned it off and cleared its campaign, label, color, position and visibility rules, while reporting "Settings saved." Each tab now saves only its own settings. Present since 1.3.0.
 * Note for anyone already affected: this stops any further loss, but settings already cleared cannot be recovered. Re-enter them once on the Floating Donate Button tab and they will stay put.
@@ -327,6 +335,9 @@ A group is a way to shorten a long list rather than a way to hide a campaign: a 
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.4.14 =
+Fixes the floating Donate button ignoring "match your campaign primary color", a welcome notice that one administrator could hide from all the others, and duplicate stylesheet links from both blocks. Donation embeds now get distinct frame titles for screen readers.
 
 = 1.4.13 =
 Fixes a bug present since 1.3.0 where saving the General tab silently cleared every Floating Donate Button setting. Recommended for anyone using the floating button. Settings already lost need re-entering once; nothing else changes.

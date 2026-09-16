@@ -192,6 +192,15 @@ class DonatoTomato_Admin {
             'sanitize_callback' => [ $this, 'sanitize_color' ],
             'default'           => '',
         ] );
+        // Resolved from the selected campaign whenever the color field is left
+        // empty, so the front end can keep the "match your campaign primary
+        // color" promise without calling the campaigns API on every page view.
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_color_resolved', [
+            'type'              => 'string',
+            'sanitize_callback' => [ $this, 'sanitize_color' ],
+            'default'           => '',
+        ] );
+
         register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_show_heart', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_bool_string' ],
@@ -291,8 +300,12 @@ class DonatoTomato_Admin {
 
     public function sanitize_id_list( $value ) {
         if ( is_string( $value ) ) {
-            // The hidden form input flattens the multi-select into a
-            // comma-separated string when JS isn't applied; normalize it.
+            // Defensive, not a described fallback: this plugin's own markup is
+            // a bare <select multiple>, which always posts an array. The
+            // comment here used to claim a hidden no-JS input flattened it to
+            // a comma-separated string, and no such input has ever existed.
+            // A filter or a hand-built request can still send one, and the
+            // array handling below would choke on it.
             $value = '' === $value ? [] : explode( ',', $value );
         }
         if ( ! is_array( $value ) ) {
@@ -496,7 +509,7 @@ class DonatoTomato_Admin {
                 </div>
             <?php endif; ?>
 
-            <form method="post" action="options.php" class="donatotomato-floating-form" <?php echo '' === $org_slug ? 'aria-disabled="true"' : ''; ?>>
+            <form method="post" action="options.php" class="donatotomato-floating-form">
                 <?php settings_fields( self::OPTION_GROUP_FLOATING ); ?>
 
                 <fieldset class="donatotomato-fieldset" <?php echo '' === $org_slug ? 'disabled="disabled"' : ''; ?>>
@@ -620,6 +633,10 @@ class DonatoTomato_Admin {
                                            value="<?php echo esc_attr( $color ); ?>"
                                            class="donatotomato-color-picker"
                                            data-default-color="" />
+                                    <?php // Carries the selected campaign's own color, kept current by the picker JS, so an empty field above resolves to it at render time instead of the plugin's default green. ?>
+                                    <input type="hidden"
+                                           name="donatotomato_floating_color_resolved"
+                                           value="<?php echo esc_attr( (string) get_option( 'donatotomato_floating_color_resolved', '' ) ); ?>" />
                                     <p class="description">
                                         <?php esc_html_e( 'Leave empty to match your campaign primary color automatically.', 'donatotomato' ); ?>
                                     </p>

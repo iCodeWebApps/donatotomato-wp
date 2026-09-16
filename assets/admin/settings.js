@@ -159,8 +159,6 @@
             return;
         }
 
-        primaryColorFromApi = campaigns[ 0 ].primary_color || '';
-
         $select.empty();
         $select.append( $( '<option/>', { value: '', text: s.pickCampaign } ) );
 
@@ -194,7 +192,22 @@
         }
 
         $select.prop( 'disabled', false );
+        syncResolvedColor();
         renderPreview();
+    }
+
+    // The color "leave empty to match your campaign" resolves to, read off the
+    // SELECTED option. This used to read campaigns[0], so the preview showed
+    // the first campaign's brand no matter which campaign was picked.
+    function selectedCampaignColor() {
+        return $select.find( 'option:selected' ).attr( 'data-primary-color' ) || '';
+    }
+
+    // Saved beside the campaign so the front end can honor the promise without
+    // calling the campaigns API on every page view.
+    function syncResolvedColor() {
+        primaryColorFromApi = selectedCampaignColor();
+        $( '[name="donatotomato_floating_color_resolved"]' ).val( primaryColorFromApi );
     }
 
     $refresh.on( 'click', function ( e ) {
@@ -204,6 +217,7 @@
 
     $select.on( 'change', function () {
         $select.attr( 'data-saved', $select.val() );
+        syncResolvedColor();
         renderPreview();
     } );
 

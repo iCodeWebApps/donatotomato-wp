@@ -64,7 +64,10 @@ class DonatoTomato_Button_Block {
             );
         }
 
-        $style_handle = 'donatotomato-button-style';
+        // Same handle the button shortcode and this block's own render use:
+        // one handle per stylesheet is what makes WordPress collapse them into
+        // a single <link>. Two handles pointing at one file do not dedupe.
+        $style_handle = 'donatotomato-button';
         if ( ! wp_style_is( $style_handle, 'registered' ) ) {
             wp_register_style(
                 $style_handle,
