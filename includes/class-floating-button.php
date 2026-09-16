@@ -184,7 +184,15 @@ class DonatoTomato_Floating_Button {
             $z_index = 999999;
         }
 
+        // An explicit color wins. An empty field means "match my campaign",
+        // which the settings screen resolves from the selected campaign and
+        // stores beside it — the brand green is the last resort, not the
+        // answer to an empty field, which is what the settings screen has
+        // been promising since the field shipped.
         $color = sanitize_hex_color( (string) get_option( 'donatotomato_floating_color', '' ) );
+        if ( ! $color ) {
+            $color = sanitize_hex_color( (string) get_option( 'donatotomato_floating_color_resolved', '' ) );
+        }
         if ( ! $color ) {
             $color = '#10b981';
         }

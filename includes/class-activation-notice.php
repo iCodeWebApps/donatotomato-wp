@@ -127,11 +127,11 @@ class DonatoTomato_Activation_Notice {
             wp_send_json_error( [ 'message' => 'forbidden' ], 403 );
         }
 
+        // Per-user only. The transient is the site-wide "recently activated"
+        // window every admin's notice hangs off, so deleting it here retired
+        // the onboarding notice for everyone else the moment one admin
+        // dismissed it. Their own dismissal is already recorded in user_meta.
         update_user_meta( get_current_user_id(), self::USER_META_KEY, 1 );
-        // Also clear the transient so other admins don't see a stale notice
-        // after one admin has dismissed (best effort — per-user dismissal
-        // still wins via the user_meta check).
-        delete_transient( self::TRANSIENT_KEY );
 
         wp_send_json_success();
     }

@@ -42,8 +42,82 @@ class DonatoTomato_Admin {
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
         add_action( 'admin_init', [ $this, 'register_settings' ] );
+        add_action( 'admin_init', [ $this, 'resolve_campaign_color' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
         add_action( 'enqueue_block_editor_assets', [ $this, 'expose_block_editor_config' ] );
+    }
+
+    /**
+     * Keep the resolved campaign color current.
+     *
+     * An empty color field means "match my campaign", and the front end reads
+     * the resolved value rather than calling the API on a page view. Resolving
+     * only when the form is saved would leave every site that configured the
+     * button before this release showing the default green until somebody
+     * happened to press Save again, and would freeze the color the moment the
+     * organization restyled the campaign. So it runs on admin page loads
+     * instead: the picker's cache answers most of them, a failed lookup waits
+     * an hour, and a good one is not asked again for half a day.
+     */
+    public function resolve_campaign_color() {
+        // admin_init is not "an admin page load". Core fires it from
+        // admin-ajax.php and admin-post.php as well, and in admin-ajax it runs
+        // BEFORE the logged-in check, so without this an anonymous POST would
+        // reach the outbound lookup below and occupy a worker for its timeout.
+        if ( wp_doing_ajax() || wp_doing_cron() || ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // options.php also fires admin_init, before its save loop. That loop
+        // writes the hidden field as it was rendered when the tab was opened,
+        // so resolving here would be overwritten by a possibly older value and
+        // the guard would then suppress the correction for half a day. Skip our
+        // own save; the admin load that follows the redirect resolves instead.
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only deciding whether to skip an unrelated lookup; options.php verifies its own nonce before it writes anything.
+        if ( isset( $_POST['option_page'] ) && self::OPTION_GROUP_FLOATING === sanitize_text_field( wp_unslash( $_POST['option_page'] ) ) ) {
+            return;
+        }
+
+        if ( '' !== (string) get_option( 'donatotomato_floating_color', '' ) ) {
+            return;
+        }
+
+        $campaign = (string) get_option( 'donatotomato_floating_campaign', '' );
+        $slug     = (string) get_option( 'donatotomato_org_slug', '' );
+        if ( '' === $campaign || '' === $slug ) {
+            return;
+        }
+
+        // The throttle must not outlive the campaign it was set for. A campaign
+        // changed outside this form — WP-CLI, a migration, another plugin —
+        // would otherwise keep the previous campaign's color for up to half a
+        // day, so a mismatch re-resolves immediately.
+        $guard_key    = 'donatotomato_color_resolved_check';
+        $resolved_for = (string) get_option( 'donatotomato_floating_color_resolved_for', '' );
+        if ( $resolved_for === $campaign && get_transient( $guard_key ) ) {
+            return;
+        }
+
+        $campaigns = DonatoTomato_Campaign_Picker::fetch_campaigns( $slug );
+        if ( null === $campaigns ) {
+            set_transient( $guard_key, 1, HOUR_IN_SECONDS );
+            return;
+        }
+        set_transient( $guard_key, 1, 12 * HOUR_IN_SECONDS );
+
+        foreach ( $campaigns as $entry ) {
+            if ( ! is_array( $entry ) || ! isset( $entry['id'] ) || (string) $entry['id'] !== $campaign ) {
+                continue;
+            }
+            $color = sanitize_hex_color( isset( $entry['primary_color'] ) ? (string) $entry['primary_color'] : '' );
+            if ( $color ) {
+                update_option( 'donatotomato_floating_color_resolved_for', $campaign );
+                if ( (string) get_option( 'donatotomato_floating_color_resolved', '' ) !== $color ) {
+                    update_option( 'donatotomato_floating_color_resolved', $color );
+                }
+            }
+            return;
+        }
     }
 
     /**
@@ -192,6 +266,15 @@ class DonatoTomato_Admin {
             'sanitize_callback' => [ $this, 'sanitize_color' ],
             'default'           => '',
         ] );
+        // Resolved from the selected campaign whenever the color field is left
+        // empty, so the front end can keep the "match your campaign primary
+        // color" promise without calling the campaigns API on every page view.
+        register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_color_resolved', [
+            'type'              => 'string',
+            'sanitize_callback' => [ $this, 'sanitize_color' ],
+            'default'           => '',
+        ] );
+
         register_setting( self::OPTION_GROUP_FLOATING, 'donatotomato_floating_show_heart', [
             'type'              => 'string',
             'sanitize_callback' => [ $this, 'sanitize_bool_string' ],
@@ -291,8 +374,8 @@ class DonatoTomato_Admin {
 
     public function sanitize_id_list( $value ) {
         if ( is_string( $value ) ) {
-            // The hidden form input flattens the multi-select into a
-            // comma-separated string when JS isn't applied; normalize it.
+            // Defensive only: the <select multiple> always posts an array, but
+            // a filter or a hand-built request can send a string.
             $value = '' === $value ? [] : explode( ',', $value );
         }
         if ( ! is_array( $value ) ) {
@@ -496,7 +579,7 @@ class DonatoTomato_Admin {
                 </div>
             <?php endif; ?>
 
-            <form method="post" action="options.php" class="donatotomato-floating-form" <?php echo '' === $org_slug ? 'aria-disabled="true"' : ''; ?>>
+            <form method="post" action="options.php" class="donatotomato-floating-form">
                 <?php settings_fields( self::OPTION_GROUP_FLOATING ); ?>
 
                 <fieldset class="donatotomato-fieldset" <?php echo '' === $org_slug ? 'disabled="disabled"' : ''; ?>>
@@ -620,6 +703,10 @@ class DonatoTomato_Admin {
                                            value="<?php echo esc_attr( $color ); ?>"
                                            class="donatotomato-color-picker"
                                            data-default-color="" />
+                                    <?php // Carries the selected campaign's own color, kept current by the picker JS, so an empty field above resolves to it at render time instead of the plugin's default green. ?>
+                                    <input type="hidden"
+                                           name="donatotomato_floating_color_resolved"
+                                           value="<?php echo esc_attr( (string) get_option( 'donatotomato_floating_color_resolved', '' ) ); ?>" />
                                     <p class="description">
                                         <?php esc_html_e( 'Leave empty to match your campaign primary color automatically.', 'donatotomato' ); ?>
                                     </p>

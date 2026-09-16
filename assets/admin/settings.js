@@ -159,8 +159,6 @@
             return;
         }
 
-        primaryColorFromApi = campaigns[ 0 ].primary_color || '';
-
         $select.empty();
         $select.append( $( '<option/>', { value: '', text: s.pickCampaign } ) );
 
@@ -194,7 +192,23 @@
         }
 
         $select.prop( 'disabled', false );
+        syncResolvedColor();
         renderPreview();
+    }
+
+    // Saved beside the campaign so the front end can honor the promise without
+    // calling the campaigns API on every page view.
+    function syncResolvedColor() {
+        var $selected = $select.find( 'option:selected' );
+        // Absent is not empty. The placeholder shown when a saved campaign has
+        // disappeared upstream carries no data-primary-color at all, and
+        // writing '' from it would destroy a good stored color on the next
+        // save of any field on this tab.
+        if ( ! $selected.length || 'undefined' === typeof $selected.attr( 'data-primary-color' ) ) {
+            return;
+        }
+        primaryColorFromApi = $selected.attr( 'data-primary-color' ) || '';
+        $( '[name="donatotomato_floating_color_resolved"]' ).val( primaryColorFromApi );
     }
 
     $refresh.on( 'click', function ( e ) {
@@ -204,6 +218,7 @@
 
     $select.on( 'change', function () {
         $select.attr( 'data-saved', $select.val() );
+        syncResolvedColor();
         renderPreview();
     } );
 

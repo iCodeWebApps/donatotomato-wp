@@ -88,9 +88,11 @@ function donatotomato_is_truthy_att( $value ) {
  * @param string $group    Optional group label narrowing the destination list
  *                         to the campaigns the organization gave that label.
  *                         Ignored unless the donor is choosing.
+ * @param string $title    Optional accessible title for the iframe. Empty
+ *                         falls back to a title that stays unique per page.
  * @return string Iframe markup.
  */
-function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 600, $group = '' ) {
+function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 600, $group = '', $title = '' ) {
     $path = '/widget/' . rawurlencode( $slug );
     if ( '' !== $campaign ) {
         $path .= '/' . rawurlencode( $campaign );
@@ -120,6 +122,55 @@ function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 6
         $src,
         $width,
         $height,
-        esc_attr__( 'Donation form', 'donatotomato' )
+        // The group names the destination list only when the donor is actually
+        // choosing — the same condition the query string above applies. Naming
+        // a group on a single-campaign embed would tell a screen-reader user
+        // the frame opens a list it does not open.
+        esc_attr( donatotomato_iframe_title( '' === $campaign ? $group : '', $title ) )
+    );
+}
+
+/**
+ * A title for the next donation iframe in this request.
+ *
+ * Every embed used to be titled "Donation form", so a page carrying two of
+ * them handed screen-reader users two frames it could not tell apart. A group
+ * label names the destination list it opens; an explicit title from the
+ * author wins over both; repeats of any of them are numbered.
+ *
+ * ⚠️ The counter spans the REQUEST, not the page: a theme that runs the
+ * content filter twice, or a REST call rendering several posts at once, also
+ * advances it. Distinctness is what this guarantees; a tidy 1, 2, 3 on the
+ * visible page is not.
+ *
+ * @param string $group    Optional group label, already narrowed by the caller.
+ * @param string $explicit Optional author-supplied title.
+ * @return string Title text, distinct from the others in this request.
+ */
+function donatotomato_iframe_title( $group = '', $explicit = '' ) {
+    static $used = [];
+
+    if ( '' !== $explicit ) {
+        $title = $explicit;
+    } elseif ( '' !== $group ) {
+        $title = sprintf(
+            /* translators: %s: the group label the organization gave a set of campaigns. */
+            __( 'Donation form: %s', 'donatotomato' ),
+            $group
+        );
+    } else {
+        $title = __( 'Donation form', 'donatotomato' );
+    }
+
+    $used[ $title ] = isset( $used[ $title ] ) ? $used[ $title ] + 1 : 1;
+    if ( 1 === $used[ $title ] ) {
+        return $title;
+    }
+
+    return sprintf(
+        /* translators: 1: an iframe title, 2: which use of that same title this is, counting from 1. Replace the parentheses with whatever your locale uses. */
+        __( '%1$s (%2$d)', 'donatotomato' ),
+        $title,
+        $used[ $title ]
     );
 }

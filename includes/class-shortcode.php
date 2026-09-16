@@ -33,6 +33,7 @@ class DonatoTomato_Shortcode {
             'campaign' => '',
             'choose'   => '',
             'group'    => '',
+            'title'    => '',
             'width'    => 480,
             'height'   => 600,
         ], $atts, 'donatotomato' );
@@ -40,6 +41,7 @@ class DonatoTomato_Shortcode {
         $slug     = sanitize_text_field( $atts['slug'] );
         $campaign = sanitize_text_field( $atts['campaign'] );
         $group    = sanitize_text_field( $atts['group'] );
+        $title    = sanitize_text_field( $atts['title'] );
         $width    = absint( $atts['width'] ) ?: 480;
         $height   = absint( $atts['height'] ) ?: 600;
 
@@ -77,6 +79,6 @@ class DonatoTomato_Shortcode {
         // the shelf it sits on, so the narrower instruction simply wins. An
         // error there would punish a combination that costs nothing, and
         // embed.js already resolves the same pairing the same silent way.
-        return donatotomato_render_iframe( $slug, $choose ? '' : $campaign, $width, $height, $group );
+        return donatotomato_render_iframe( $slug, $choose ? '' : $campaign, $width, $height, $group, $title );
     }
 }
