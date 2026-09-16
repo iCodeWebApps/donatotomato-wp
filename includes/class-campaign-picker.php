@@ -151,4 +151,52 @@ class DonatoTomato_Campaign_Picker {
             200
         );
     }
+
+    /**
+     * The campaigns for a slug: the cached copy while it is warm, one upstream
+     * read otherwise. Returns null when they cannot be read at all, so a caller
+     * can tell "this organization has no campaigns" from "I could not ask".
+     *
+     * Deliberately separate from handle_request(): that method's responses
+     * carry error codes the settings JS switches on, and callers of this one
+     * want the list or nothing.
+     *
+     * @param string $slug Organization slug.
+     * @return array|null
+     */
+    public static function fetch_campaigns( $slug ) {
+        $slug = sanitize_text_field( (string) $slug );
+        if ( '' === $slug ) {
+            return null;
+        }
+
+        $transient_key = self::TRANSIENT_PREFIX . md5( $slug );
+        $cached        = get_transient( $transient_key );
+        if ( false !== $cached && is_array( $cached ) ) {
+            return $cached;
+        }
+
+        $response = wp_remote_get(
+            add_query_arg( 'slug', rawurlencode( $slug ), self::API_URL ),
+            [
+                'timeout' => 8,
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ]
+        );
+
+        if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
+            return null;
+        }
+
+        $decoded = json_decode( wp_remote_retrieve_body( $response ), true );
+        if ( ! is_array( $decoded ) ) {
+            return null;
+        }
+
+        set_transient( $transient_key, $decoded, self::TRANSIENT_TTL );
+
+        return $decoded;
+    }
 }

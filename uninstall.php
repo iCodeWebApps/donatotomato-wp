@@ -47,6 +47,10 @@ foreach ( $donatotomato_options as $donatotomato_option ) {
 // Activation-notice signal transient.
 delete_transient( 'donatotomato_show_activation_notice' );
 
+// Throttle for the campaign-color lookup that keeps the floating button's
+// resolved color current.
+delete_transient( 'donatotomato_color_resolved_check' );
+
 // Per-user "dismissed the activation notice" flag (all users).
 delete_metadata( 'user', 0, 'donatotomato_dismissed_activation_notice', '', true );
 

@@ -122,25 +122,37 @@ function donatotomato_render_iframe( $slug, $campaign, $width = 480, $height = 6
         $src,
         $width,
         $height,
-        esc_attr( '' !== $title ? $title : donatotomato_iframe_title( $group ) )
+        // The group names the destination list only when the donor is actually
+        // choosing — the same condition the query string above applies. Naming
+        // a group on a single-campaign embed would tell a screen-reader user
+        // the frame opens a list it does not open.
+        esc_attr( donatotomato_iframe_title( '' === $campaign ? $group : '', $title ) )
     );
 }
 
 /**
- * A title for the next donation iframe rendered on this page.
+ * A title for the next donation iframe in this request.
  *
  * Every embed used to be titled "Donation form", so a page carrying two of
  * them handed screen-reader users two frames it could not tell apart. A group
- * label names the destination list it opens; otherwise repeats are numbered in
- * render order. An explicit title="" on the shortcode wins over both.
+ * label names the destination list it opens; an explicit title from the
+ * author wins over both; repeats of any of them are numbered.
  *
- * @param string $group Optional group label.
- * @return string Title text, unique among the iframes rendered so far.
+ * ⚠️ The counter spans the REQUEST, not the page: a theme that runs the
+ * content filter twice, or a REST call rendering several posts at once, also
+ * advances it. Distinctness is what this guarantees; a tidy 1, 2, 3 on the
+ * visible page is not.
+ *
+ * @param string $group    Optional group label, already narrowed by the caller.
+ * @param string $explicit Optional author-supplied title.
+ * @return string Title text, distinct from the others in this request.
  */
-function donatotomato_iframe_title( $group = '' ) {
+function donatotomato_iframe_title( $group = '', $explicit = '' ) {
     static $used = [];
 
-    if ( '' !== $group ) {
+    if ( '' !== $explicit ) {
+        $title = $explicit;
+    } elseif ( '' !== $group ) {
         $title = sprintf(
             /* translators: %s: the group label the organization gave a set of campaigns. */
             __( 'Donation form: %s', 'donatotomato' ),
@@ -151,14 +163,14 @@ function donatotomato_iframe_title( $group = '' ) {
     }
 
     $used[ $title ] = isset( $used[ $title ] ) ? $used[ $title ] + 1 : 1;
-    if ( $used[ $title ] > 1 ) {
-        $title = sprintf(
-            /* translators: 1: the iframe title, 2: how many embeds on this page share it. */
-            __( '%1$s (%2$d)', 'donatotomato' ),
-            $title,
-            $used[ $title ]
-        );
+    if ( 1 === $used[ $title ] ) {
+        return $title;
     }
 
-    return $title;
+    return sprintf(
+        /* translators: 1: an iframe title, 2: which use of that same title this is, counting from 1. Replace the parentheses with whatever your locale uses. */
+        __( '%1$s (%2$d)', 'donatotomato' ),
+        $title,
+        $used[ $title ]
+    );
 }

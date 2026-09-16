@@ -42,8 +42,56 @@ class DonatoTomato_Admin {
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
         add_action( 'admin_init', [ $this, 'register_settings' ] );
+        add_action( 'admin_init', [ $this, 'resolve_campaign_color' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
         add_action( 'enqueue_block_editor_assets', [ $this, 'expose_block_editor_config' ] );
+    }
+
+    /**
+     * Keep the resolved campaign color current.
+     *
+     * An empty color field means "match my campaign", and the front end reads
+     * the resolved value rather than calling the API on a page view. Resolving
+     * only when the form is saved would leave every site that configured the
+     * button before this release showing the default green until somebody
+     * happened to press Save again, and would freeze the color the moment the
+     * organization restyled the campaign. So it runs on admin page loads
+     * instead: the picker's cache answers most of them, a failed lookup waits
+     * an hour, and a good one is not asked again for half a day.
+     */
+    public function resolve_campaign_color() {
+        if ( '' !== (string) get_option( 'donatotomato_floating_color', '' ) ) {
+            return;
+        }
+
+        $campaign = (string) get_option( 'donatotomato_floating_campaign', '' );
+        $slug     = (string) get_option( 'donatotomato_org_slug', '' );
+        if ( '' === $campaign || '' === $slug ) {
+            return;
+        }
+
+        $checked_recently = 'donatotomato_color_resolved_check';
+        if ( get_transient( $checked_recently ) ) {
+            return;
+        }
+
+        $campaigns = DonatoTomato_Campaign_Picker::fetch_campaigns( $slug );
+        if ( null === $campaigns ) {
+            set_transient( $checked_recently, 1, HOUR_IN_SECONDS );
+            return;
+        }
+        set_transient( $checked_recently, 1, 12 * HOUR_IN_SECONDS );
+
+        foreach ( $campaigns as $entry ) {
+            if ( ! is_array( $entry ) || ! isset( $entry['id'] ) || (string) $entry['id'] !== $campaign ) {
+                continue;
+            }
+            $color = sanitize_hex_color( isset( $entry['primary_color'] ) ? (string) $entry['primary_color'] : '' );
+            if ( $color && (string) get_option( 'donatotomato_floating_color_resolved', '' ) !== $color ) {
+                update_option( 'donatotomato_floating_color_resolved', $color );
+            }
+            return;
+        }
     }
 
     /**
@@ -300,12 +348,8 @@ class DonatoTomato_Admin {
 
     public function sanitize_id_list( $value ) {
         if ( is_string( $value ) ) {
-            // Defensive, not a described fallback: this plugin's own markup is
-            // a bare <select multiple>, which always posts an array. The
-            // comment here used to claim a hidden no-JS input flattened it to
-            // a comma-separated string, and no such input has ever existed.
-            // A filter or a hand-built request can still send one, and the
-            // array handling below would choke on it.
+            // Defensive only: the <select multiple> always posts an array, but
+            // a filter or a hand-built request can send a string.
             $value = '' === $value ? [] : explode( ',', $value );
         }
         if ( ! is_array( $value ) ) {

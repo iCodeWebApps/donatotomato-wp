@@ -208,6 +208,12 @@ The donor sees only the campaigns in that group. Add a worker to the group later
 
 A group is a way to shorten a long list rather than a way to hide a campaign: a visitor can still reach every active campaign through an embed with no group. If a group has no active campaigns in it, the form says so plainly and offers a link to your full list. Leave the group out and the donor sees every active campaign, exactly as before.
 
+= Naming an embed for screen readers (new in 1.4.14) =
+
+Every embed used to be announced as "Donation form", so a page carrying two of them gave screen-reader users two frames they could not tell apart. They are now distinguished on their own: the group name is used when the donor is choosing from one, and repeats on a page are numbered. Give an embed your own wording with `title`:
+
+`[donatotomato campaign="your-campaign-id" title="Give to the winter appeal"]`
+
 **Adding to your nav menu:** Most themes support adding a Custom Link or Custom HTML to the menu. Use the shortcode in a Custom HTML block, or paste the rendered HTML directly: `<button type="button" class="donatotomato-button" data-dt-donate="your-campaign-id">Donate</button>` (works only after the plugin is active so the supporting script is loaded).
 
 == Screenshots ==

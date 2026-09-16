@@ -47,6 +47,12 @@ Let donors pick the destination instead of naming one campaign. The form opens o
 
 `choose="yes"` wins if a campaign is given as well, and `group` applies only while the donor is choosing. If your organization has one active campaign, the donor goes straight to it.
 
+Name the embed for screen readers with `title`. Without it the frame is titled "Donation form", or "Donation form: Your group" while the donor is choosing, and repeats on a page are numbered:
+
+```
+[donatotomato campaign="your-campaign-id" title="Give to the winter appeal"]
+```
+
 Gutenberg block: search for **DonatoTomato Widget** in the block inserter. Enter your Campaign ID in the settings panel; the editor shows a configured-state placeholder and the live widget renders on the published page.
 
 ### Donate button (pop-up modal trigger)
