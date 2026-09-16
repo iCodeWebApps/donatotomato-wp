@@ -186,7 +186,21 @@ class DonatoTomato_Campaign_Picker {
             ]
         );
 
-        if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
+        if ( is_wp_error( $response ) ) {
+            return null;
+        }
+
+        $status = (int) wp_remote_retrieve_response_code( $response );
+
+        // A 404 is an answer, not a failure to ask: this slug has nothing to
+        // read. Returning null for it made a typo'd or deleted slug retry on
+        // the short failure interval forever, for a condition that will not
+        // resolve on its own.
+        if ( 404 === $status ) {
+            return [];
+        }
+
+        if ( 200 !== $status ) {
             return null;
         }
 

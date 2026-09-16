@@ -196,13 +196,6 @@
         renderPreview();
     }
 
-    // The color "leave empty to match your campaign" resolves to, read off the
-    // SELECTED option. This used to read campaigns[0], so the preview showed
-    // the first campaign's brand no matter which campaign was picked.
-    function selectedCampaignColor() {
-        return $select.find( 'option:selected' ).attr( 'data-primary-color' ) || '';
-    }
-
     // Saved beside the campaign so the front end can honor the promise without
     // calling the campaigns API on every page view.
     function syncResolvedColor() {

@@ -60,6 +60,24 @@ class DonatoTomato_Admin {
      * an hour, and a good one is not asked again for half a day.
      */
     public function resolve_campaign_color() {
+        // admin_init is not "an admin page load". Core fires it from
+        // admin-ajax.php and admin-post.php as well, and in admin-ajax it runs
+        // BEFORE the logged-in check, so without this an anonymous POST would
+        // reach the outbound lookup below and occupy a worker for its timeout.
+        if ( wp_doing_ajax() || wp_doing_cron() || ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        // options.php also fires admin_init, before its save loop. That loop
+        // writes the hidden field as it was rendered when the tab was opened,
+        // so resolving here would be overwritten by a possibly older value and
+        // the guard would then suppress the correction for half a day. Skip our
+        // own save; the admin load that follows the redirect resolves instead.
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- only deciding whether to skip an unrelated lookup; options.php verifies its own nonce before it writes anything.
+        if ( isset( $_POST['option_page'] ) && self::OPTION_GROUP_FLOATING === sanitize_text_field( wp_unslash( $_POST['option_page'] ) ) ) {
+            return;
+        }
+
         if ( '' !== (string) get_option( 'donatotomato_floating_color', '' ) ) {
             return;
         }
@@ -70,25 +88,33 @@ class DonatoTomato_Admin {
             return;
         }
 
-        $checked_recently = 'donatotomato_color_resolved_check';
-        if ( get_transient( $checked_recently ) ) {
+        // The throttle must not outlive the campaign it was set for. A campaign
+        // changed outside this form — WP-CLI, a migration, another plugin —
+        // would otherwise keep the previous campaign's color for up to half a
+        // day, so a mismatch re-resolves immediately.
+        $guard_key    = 'donatotomato_color_resolved_check';
+        $resolved_for = (string) get_option( 'donatotomato_floating_color_resolved_for', '' );
+        if ( $resolved_for === $campaign && get_transient( $guard_key ) ) {
             return;
         }
 
         $campaigns = DonatoTomato_Campaign_Picker::fetch_campaigns( $slug );
         if ( null === $campaigns ) {
-            set_transient( $checked_recently, 1, HOUR_IN_SECONDS );
+            set_transient( $guard_key, 1, HOUR_IN_SECONDS );
             return;
         }
-        set_transient( $checked_recently, 1, 12 * HOUR_IN_SECONDS );
+        set_transient( $guard_key, 1, 12 * HOUR_IN_SECONDS );
 
         foreach ( $campaigns as $entry ) {
             if ( ! is_array( $entry ) || ! isset( $entry['id'] ) || (string) $entry['id'] !== $campaign ) {
                 continue;
             }
             $color = sanitize_hex_color( isset( $entry['primary_color'] ) ? (string) $entry['primary_color'] : '' );
-            if ( $color && (string) get_option( 'donatotomato_floating_color_resolved', '' ) !== $color ) {
-                update_option( 'donatotomato_floating_color_resolved', $color );
+            if ( $color ) {
+                update_option( 'donatotomato_floating_color_resolved_for', $campaign );
+                if ( (string) get_option( 'donatotomato_floating_color_resolved', '' ) !== $color ) {
+                    update_option( 'donatotomato_floating_color_resolved', $color );
+                }
             }
             return;
         }

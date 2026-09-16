@@ -121,7 +121,7 @@ This plugin connects to external services operated by DonatoTomato (Dev1 Consult
 
 **DonatoTomato Platform (app.donatotomato.com)**
 
-When a visitor loads a page containing a DonatoTomato widget, their browser loads an iframe from `app.donatotomato.com`. When a page contains a DonatoTomato Donate button (including the site-wide floating Donate button), the browser additionally loads a small focal-modal script (`embed.js`, ~2KB gzip) from `app.donatotomato.com` that opens the donation iframe in a pop-up overlay when the button is clicked. The plugin admin also fetches a list of your campaigns from `app.donatotomato.com` to populate the campaign picker dropdown. Donation form submissions, including donor name, email, and payment details, are transmitted to and processed by DonatoTomato and Stripe. No payment or donor data is stored on your WordPress site.
+When a visitor loads a page containing a DonatoTomato widget, their browser loads an iframe from `app.donatotomato.com`. When a page contains a DonatoTomato Donate button (including the site-wide floating Donate button), the browser additionally loads a small focal-modal script (`embed.js`, ~2KB gzip) from `app.donatotomato.com` that opens the donation iframe in a pop-up overlay when the button is clicked. The plugin admin also fetches a list of your campaigns from `app.donatotomato.com`. That happens when the campaign picker or Shortcode Builder is on screen, and, if you set the floating Donate button to match your campaign color, in the background on an administrator's page load so the stored color stays current. The background lookup is throttled to at most once every 12 hours, is made only for administrators, and never happens on a visitor's page view. Donation form submissions, including donor name, email, and payment details, are transmitted to and processed by DonatoTomato and Stripe. No payment or donor data is stored on your WordPress site.
 
 * Service: [donatotomato.com](https://donatotomato.com)
 * Terms of Service: [donatotomato.com/terms](https://donatotomato.com/terms)
@@ -210,9 +210,11 @@ A group is a way to shorten a long list rather than a way to hide a campaign: a 
 
 = Naming an embed for screen readers (new in 1.4.14) =
 
-Every embed used to be announced as "Donation form", so a page carrying two of them gave screen-reader users two frames they could not tell apart. They are now distinguished on their own: the group name is used when the donor is choosing from one, and repeats on a page are numbered. Give an embed your own wording with `title`:
+Every inline form used to be announced as "Donation form", so a page carrying two of them gave screen-reader users two frames they could not tell apart. They are now distinguished on their own: the group name is used when the donor is choosing from one, and repeats on a page are numbered. Give one your own wording with `title`:
 
 `[donatotomato campaign="your-campaign-id" title="Give to the winter appeal"]`
+
+`title` applies to the inline `[donatotomato]` form only. A Donate button opens the form in a pop-up that DonatoTomato renders, so there is no frame on your page for the button shortcode or block to name.
 
 **Adding to your nav menu:** Most themes support adding a Custom Link or Custom HTML to the menu. Use the shortcode in a Custom HTML block, or paste the rendered HTML directly: `<button type="button" class="donatotomato-button" data-dt-donate="your-campaign-id">Donate</button>` (works only after the plugin is active so the supporting script is loaded).
 
@@ -231,6 +233,7 @@ Every embed used to be announced as "Donation form", so a page carrying two of t
 * Fixed: both blocks loaded their stylesheet twice, so pages using them carried a duplicate stylesheet link.
 * Accessibility: donation embeds no longer all share the frame title "Donation form". A group name is used when you set one, repeats on a page are numbered, and the inline shortcode now accepts title="Your own wording".
 * Accessibility: removed an aria-disabled attribute from the floating-button settings form that conveyed nothing to screen readers. The disabled fieldset beside it already does the real work.
+* Note on the color match above: when the color field is left empty, the plugin looks your campaign's color up from your DonatoTomato account in the background, on an administrator's page load, at most once every 12 hours. Nothing is fetched when a visitor views your site.
 * Internal: corrected a comment describing a form input that does not exist.
 
 = 1.4.13 =

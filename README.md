@@ -47,7 +47,7 @@ Let donors pick the destination instead of naming one campaign. The form opens o
 
 `choose="yes"` wins if a campaign is given as well, and `group` applies only while the donor is choosing. If your organization has one active campaign, the donor goes straight to it.
 
-Name the embed for screen readers with `title`. Without it the frame is titled "Donation form", or "Donation form: Your group" while the donor is choosing, and repeats on a page are numbered:
+Name this inline embed for screen readers with `title`, which the `[donatotomato]` shortcode accepts (the Donate button opens the form in a pop-up the app itself renders, so it takes no title). Without it the frame is titled "Donation form", or "Donation form: Your group" while the donor is choosing, and repeats on a page are numbered:
 
 ```
 [donatotomato campaign="your-campaign-id" title="Give to the winter appeal"]
